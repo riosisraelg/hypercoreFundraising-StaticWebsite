@@ -214,18 +214,9 @@ sequenceDiagram
 | full_name | String | Admin's display name |
 | role | String | Team role (e.g., "Mechatronics Engineer", "Developer") |
 
-### FlyerContent
+### Flyer / About Us Content
 
-| Field | Type | Description |
-| ----- | ---- | ----------- |
-| id | UUID | Unique identifier |
-| headline | String | Main headline |
-| body | Text | Draw description |
-| about_us | Text | About Us section content |
-| fundraising_goal | Decimal | Target amount in MXN |
-| current_raised | Decimal | Current amount raised (calculated from active ticket count × price) |
-| contact_whatsapp | String | wa.me link |
-| updated_at | Timestamp | Last update |
+No database table needed — all flyer content (headline, prizes, about us, team profiles, contact info) is **static in the React frontend**. The only dynamic data on the home page is the fundraising dashboard, which is computed from the ticket count via `/api/dashboard`.
 
 ### Entity Relationship Diagram
 
