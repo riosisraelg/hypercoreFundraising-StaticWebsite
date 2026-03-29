@@ -1,0 +1,84 @@
+# === macOS ===
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# === VS Code / Kiro ===
+.vscode/
+*.code-workspace
+
+# === LaTeX ===
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+*.bbl
+*.blg
+*.nav
+*.snm
+*.vrb
+*.bcf
+*.run.xml
+
+# === Python ===
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+pip-log.txt
+pip-delete-this-directory.txt
+.mypy_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+
+# === Django ===
+*.sqlite3
+db.sqlite3
+media/
+staticfiles/
+*.log
+
+# === Node / React ===
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp
+.pnp.js
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# === AWS Amplify ===
+amplify/#current-cloud-backend
+amplify/.config/local-*
+amplify/logs/
+amplify/mock-data/
+amplify/mock-api-resources/
+aws-exports.js
+awsconfiguration.json
+amplifyconfiguration.json
+amplifyconfiguration.dart
+amplify-build-config.json
+amplify-gradle-config.json
+amplifytools.xcconfig

@@ -1,0 +1,289 @@
+\documentclass[12pt,a4paper]{article}
+
+% --- Paquetes ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{ragged2e}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{tabularx}
+\usepackage{float}
+
+\justifying
+
+\definecolor{hypercore}{RGB}{41, 98, 255}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=hypercore,
+    urlcolor=hypercore
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.8em}
+
+\begin{document}
+
+\begin{center}
+{\LARGE \textbf{Rifa Digital HyperCore}}\\[0.3em]
+{\large ¿Cómo va a funcionar nuestra rifa?}\\[1em]
+{\normalsize Equipo HyperCore --- Universidad Tecmilenio}\\
+{\normalsize 27 de marzo de 2026}
+\end{center}
+
+\vspace{0.5em}
+\hrule
+\vspace{1em}
+
+% ============================================================
+% 1. ¿QUÉ ONDA?
+% ============================================================
+\section{¿Qué onda con esto?}
+
+Vamos a hacer una \textbf{rifa digital} para juntar lana para el viaje a Cancún. Ganamos la fase regional del reto \textbf{KIA Mexico Innovation MeetUp 2026} en la Universidad Tecmilenio y ahora necesitamos fondear el viaje a la final nacional.
+
+La idea es tener una \textbf{página web} donde la gente pueda:
+
+\begin{itemize}[leftmargin=2em]
+    \item Ver de qué se trata la rifa y quiénes somos.
+    \item Comprar su boleto digital.
+    \item Consultar los resultados cuando se haga el sorteo.
+\end{itemize}
+
+Nosotros como equipo vamos a poder:
+
+\begin{itemize}[leftmargin=2em]
+    \item Ver quién compró boleto y validar sus pagos.
+    \item Ejecutar el sorteo cuando estemos listos.
+    \item Notificar a todos los participantes de sus resultados.
+\end{itemize}
+
+% ============================================================
+% 2. LOS NÚMEROS
+% ============================================================
+\section{Los números}
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{Xr}
+\toprule
+\textbf{Concepto} & \textbf{Cantidad} \\
+\midrule
+Costo por persona (avión, hotel, comida, 4 noches) & \$13,000 MXN \\
+Personas a fondear & 4 de 5 \\
+Total que necesitamos & \$52,000 MXN \\
+Lo que queremos juntar con la rifa (la mitad) & \$26,000 MXN \\
+Precio del boleto & \$200 MXN \\
+Boletos que vende cada quien & 40 \\
+Total de boletos & 200 \\
+Ingreso bruto si vendemos todo & \$40,000 MXN \\
+Fecha límite (aprox.) & 20 de abril de 2026 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+La otra mitad (\$26,000) la juntamos por otros medios. Del ingreso de boletos hay que descontar lo que cuesten los premios.
+
+% ============================================================
+% 3. PREMIOS
+% ============================================================
+\section{Los premios}
+
+Habrá \textbf{3 ganadores}:
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{0.7\textwidth}{cX}
+\toprule
+\textbf{Lugar} & \textbf{Premio} \\
+\midrule
+1\textsuperscript{er} lugar & \$5,000 MXN en efectivo \\
+2\textsuperscript{do} lugar & Bocina JBL Flip 7 \\
+3\textsuperscript{er} lugar & Botella Maestro Dobel \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ============================================================
+% 4. ¿CÓMO COMPRA ALGUIEN UN BOLETO?
+% ============================================================
+\section{¿Cómo compra alguien un boleto?}
+
+Así de sencillo:
+
+\begin{enumerate}[leftmargin=2em]
+    \item La persona entra a nuestra página web.
+    \item Ve la info de la rifa, los premios, y quiénes somos.
+    \item Le da clic a ``Comprar Boleto''.
+    \item Llena sus datos: nombre, email, y teléfono (opcional).
+    \item Elige si quiere que le mandemos notificaciones por email o no.
+    \item Paga por alguno de estos medios:
+    \begin{itemize}
+        \item \textbf{Efectivo:} nos paga en persona y nosotros confirmamos en el sistema.
+        \item \textbf{Transferencia:} sube su comprobante y nosotros lo revisamos.
+        \item \textbf{Pago en línea:} paga directo en la página y se confirma solo.
+    \end{itemize}
+    \item Recibe su boleto digital por email y lo puede ver en la página.
+\end{enumerate}
+
+\textbf{Importante:} El boleto no ``cuenta'' para el sorteo hasta que nosotros (o el sistema) confirmemos el pago. Si alguien no paga, su boleto queda pendiente y no entra al sorteo.
+
+% ============================================================
+% 5. ¿CÓMO FUNCIONA EL SORTEO?
+% ============================================================
+\section{¿Cómo funciona el sorteo?}
+
+\begin{enumerate}[leftmargin=2em]
+    \item Primero nos aseguramos de que \textbf{todos los pagos estén revisados}. No puede haber boletos pendientes --- todos tienen que estar confirmados o rechazados.
+    \item Uno de nosotros (admin) le da al botón de ``Ejecutar Sorteo'' en el panel.
+    \item El sistema elige \textbf{3 ganadores al azar} de entre todos los boletos confirmados. Todos tienen la misma probabilidad.
+    \item Se publican los resultados en la página.
+    \item Se manda un \textbf{email personalizado a cada participante}:
+    \begin{itemize}
+        \item Si ganó: ``¡Felicidades! Ganaste [premio]. Contáctanos con tu folio para reclamar tu premio.''
+        \item Si no ganó: ``Gracias por participar. Te invitamos a seguir nuestro camino en la competencia.''
+    \end{itemize}
+    \item Los ganadores nos contactan con su número de folio y les entregamos su premio.
+\end{enumerate}
+
+No va a ser en vivo. El sistema lo hace automático y publica los resultados.
+
+% ============================================================
+% 6. ¿QUÉ PUEDE HACER EL PARTICIPANTE?
+% ============================================================
+\section{¿Qué puede hacer el participante en la página?}
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Ver su boleto} con su folio y datos.
+    \item \textbf{Actualizar su info} (nombre, email, teléfono).
+    \item \textbf{Consultar resultados} después del sorteo (por folio o email).
+    \item \textbf{Salirse de la rifa} si ya no quiere participar. No hay reembolso automático, pero si nos contacta podemos ver cómo ayudarle.
+    \item \textbf{Pedir que borren sus datos} si quiere que eliminemos su información.
+\end{itemize}
+
+% ============================================================
+% 7. ¿QUÉ HACEMOS NOSOTROS COMO EQUIPO?
+% ============================================================
+\section{¿Qué hacemos nosotros como equipo?}
+
+Desde un panel de administración vamos a poder:
+
+\begin{itemize}[leftmargin=2em]
+    \item Ver todos los boletos vendidos y su estado (pendiente, confirmado, rechazado).
+    \item \textbf{Revisar comprobantes} de transferencia y aceptar o rechazar pagos.
+    \item \textbf{Confirmar pagos en efectivo} manualmente.
+    \item \textbf{Ejecutar el sorteo} cuando todo esté listo.
+    \item Ver los resultados y el estado de las notificaciones enviadas.
+\end{itemize}
+
+% ============================================================
+% 8. LA PÁGINA "NOSOTROS"
+% ============================================================
+\section{La página ``Nosotros''}
+
+Esta sección es súper importante para que la gente confíe en la rifa. Va a incluir:
+
+\begin{itemize}[leftmargin=2em]
+    \item Quiénes somos --- presentación del equipo HyperCore.
+    \item Foto y rol de cada integrante.
+    \item Links a nuestros perfiles de LinkedIn.
+    \item Links a los certificados del Innovation MeetUp (para que puedan verificar).
+    \item Una breve explicación del reto de KIA y por qué necesitamos los fondos.
+    \item Links a nuestras redes sociales.
+    \item Email de contacto.
+\end{itemize}
+
+La idea es que cualquier persona que entre y no nos conozca pueda verificar que somos reales y que la causa es legítima.
+
+% ============================================================
+% 9. FORMAS DE PAGO
+% ============================================================
+\section{Formas de pago}
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{lXl}
+\toprule
+\textbf{Método} & \textbf{¿Cómo funciona?} & \textbf{¿Quién confirma?} \\
+\midrule
+Efectivo & Nos pagan en persona & Nosotros en el panel \\
+Transferencia & Suben comprobante en la página & Nosotros revisamos \\
+Pago en línea & Pagan directo en la página & Se confirma solo \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+La pasarela de pago en línea todavía está por definirse. Hay que revisar comisiones de Mercado Pago, Stripe, PayPal, etc.
+
+% ============================================================
+% 10. NOTIFICACIONES
+% ============================================================
+\section{Notificaciones por email}
+
+El email es \textbf{opcional}. El participante decide si quiere recibirlos o no.
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Confirmación de boleto:} cuando validamos su pago.
+    \item \textbf{Resultado del sorteo:} personalizado --- si ganó o no, con invitación a seguirnos.
+\end{itemize}
+
+Si alguien no quiere emails, puede consultar resultados en la página o en nuestras redes. Y si gana, lo contactamos personalmente.
+
+% ============================================================
+% 11. ¿QUÉ PASA SI ALGO SALE MAL?
+% ============================================================
+\section{¿Qué pasa si algo sale mal?}
+
+Ya pensamos en varios escenarios:
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Alguien no paga:} su boleto queda pendiente y no entra al sorteo. Si pasa mucho tiempo, se cancela automáticamente.
+    \item \textbf{No llega la confirmación de un pago en línea:} el sistema revisa periódicamente con la pasarela para verificar.
+    \item \textbf{Intentamos hacer el sorteo sin boletos confirmados:} el sistema no lo permite.
+    \item \textbf{Falla el envío de un email:} se reintenta automáticamente varias veces. Si sigue fallando, nos avisa para revisarlo manualmente.
+    \item \textbf{Alguien intenta ejecutar el sorteo dos veces:} el sistema no lo permite. Los resultados no se pueden cambiar una vez publicados.
+\end{itemize}
+
+% ============================================================
+% 12. PENDIENTES
+% ============================================================
+\section{Lo que falta por definir}
+
+Estos son los puntos que necesitamos resolver como equipo:
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{cX}
+\toprule
+\textbf{\#} & \textbf{Pendiente} \\
+\midrule
+1 & Revisar la ley de protección de datos (LFPDPPP) --- ¿qué necesitamos cumplir? \\
+2 & Elegir la plataforma de pago en línea (revisar comisiones) \\
+3 & Confirmar la fecha exacta del sorteo (20 de abril es aproximado) \\
+4 & Definir las herramientas para construir la página \\
+5 & Conseguir los links de los certificados del Innovation MeetUp \\
+6 & Definir qué redes sociales vamos a vincular \\
+7 & Elegir el servicio para enviar emails \\
+8 & Decidir dónde vamos a hospedar la página \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ============================================================
+% CIERRE
+% ============================================================
+\vspace{1.5em}
+\hrule
+\vspace{1em}
+
+\begin{center}
+\textit{Este documento resume la idea de cómo va a funcionar nuestra rifa digital. Conforme vayamos resolviendo los pendientes, lo actualizamos. Si tienen dudas, ideas o sugerencias, díganle al equipo.}\\[1em]
+{\Large \textbf{¡Vamos a Cancún!}} $\star$
+\end{center}
+
+\end{document}
