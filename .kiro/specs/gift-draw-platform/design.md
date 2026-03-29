@@ -153,8 +153,7 @@ sequenceDiagram
 - Only active tickets participate (cancelled tickets excluded)
 - Each active ticket has equal probability
 - Selects exactly 3 winners (1st, 2nd, 3rd place)
-- Results are immutable once created
-- Draw can only execute once
+- Draw can be re-run with admin confirmation (typing "rewrite draw") — previous results are overwritten
 
 ### Component 5: Ticket Generator
 
@@ -260,7 +259,7 @@ erDiagram
 ### Error Scenario 2: Draw Already Executed
 
 **Condition**: Admin tries to execute draw again after it already ran.
-**Response**: API returns conflict error. Existing results are immutable.
+**Response**: API requires the admin to type "rewrite draw" as confirmation. If confirmed, previous results are deleted and a new draw executes. If not confirmed, existing results are preserved.
 
 ### Error Scenario 3: Cancel Already Cancelled Ticket
 
@@ -322,6 +321,94 @@ erDiagram
 - Draw execution is instant for this ticket count
 - Results page is cacheable (immutable after draw)
 - Dashboard can be computed on-the-fly (count active tickets × $200)
+
+## Correctness Properties
+
+*A property is a characteristic or behavior that should hold true across all valid executions of a system — essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees.*
+
+### Property 1: Folio uniqueness invariant
+
+*For any* sequence of ticket creation, cancellation, and reassignment operations, no two Active_Tickets shall share the same Folio at any point in time.
+
+**Validates: Requirements 1.4, 3.3, 12.3**
+
+### Property 2: Invalid input rejection
+
+*For any* buyer name that is empty or exceeds 200 characters, or *for any* phone number that is empty or in an invalid format, submitting a ticket creation request shall be rejected with a validation error and no ticket shall be created.
+
+**Validates: Requirements 1.2, 1.3**
+
+### Property 3: Ticket state machine
+
+*For any* ticket, the only valid status transition is from `active` to `cancelled`. Attempting to cancel an already-cancelled ticket or reactivate a cancelled ticket shall be rejected, leaving the ticket unchanged.
+
+**Validates: Requirements 2.1, 2.2, 12.1, 12.2**
+
+### Property 4: Cancelled tickets excluded from draw
+
+*For any* set of tickets containing both active and cancelled tickets, executing the draw shall only select winners from Active_Tickets. No Cancelled_Ticket shall ever appear in the Draw_Results.
+
+**Validates: Requirements 2.3, 6.1**
+
+### Property 5: Draw produces exactly 3 distinct winners
+
+*For any* set of 3 or more Active_Tickets, executing the draw shall produce exactly 3 Draw_Results with prize ranks 1, 2, and 3, each referencing a distinct ticket.
+
+**Validates: Requirements 6.1, 6.6**
+
+### Property 6: Draw fairness
+
+*For any* set of Active_Tickets, over a large number of independent draw executions on the same set, each Active_Ticket shall be selected as a winner with approximately equal frequency (uniform distribution).
+
+**Validates: Requirement 6.2**
+
+### Property 7: Draw immutability
+
+*For any* completed draw, the stored Draw_Results shall not change on subsequent requests. Attempting to execute the draw a second time shall return a conflict error and the original results shall remain identical.
+
+**Validates: Requirements 6.3, 6.4**
+
+### Property 8: Folio reassignment on cancelled tickets
+
+*For any* cancelled Folio and valid buyer data, reassigning the folio shall produce a new Active_Ticket reusing that Folio. *For any* Folio belonging to an Active_Ticket, attempting reassignment shall be rejected.
+
+**Validates: Requirements 3.1, 3.2**
+
+### Property 9: No PII in public results
+
+*For any* draw result returned by the public results endpoint, the response shall contain only Folio numbers and prize ranks. No buyer name or phone number shall be present in the response.
+
+**Validates: Requirements 7.1, 11.4**
+
+### Property 10: Dashboard computation
+
+*For any* set of tickets with varying statuses, the dashboard endpoint shall return a count equal to the number of Active_Tickets and a total amount equal to that count multiplied by $200 MXN.
+
+**Validates: Requirement 8.1**
+
+### Property 11: Admin endpoint authentication enforcement
+
+*For any* admin-only endpoint (ticket management, draw execution), sending a request without valid authentication shall return an unauthorized error. *For any* public endpoint (results, dashboard, login), sending a request without authentication shall succeed.
+
+**Validates: Requirements 10.2, 10.3, 10.4**
+
+### Property 12: Ticket generation content completeness
+
+*For any* ticket, generating a downloadable file (PDF, Apple Wallet, or Google Wallet) shall produce output containing the folio number, buyer name, draw title, draw date, and HyperCore branding.
+
+**Validates: Requirements 5.1, 5.2, 5.3**
+
+### Property 13: Ticket list completeness
+
+*For any* set of created tickets (active and cancelled), the ticket list endpoint shall return all of them. *For any* individual ticket, the detail endpoint shall return all fields: folio, buyer name, phone, status, creation timestamp, cancellation timestamp, and creating admin.
+
+**Validates: Requirements 4.1, 4.2**
+
+### Property 14: Password storage security
+
+*For any* Admin record in the database, the stored password value shall be a hash, never the plain-text password.
+
+**Validates: Requirement 11.5**
 
 ## Dependencies
 

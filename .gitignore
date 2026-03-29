@@ -54,7 +54,7 @@ htmlcov/
 db.sqlite3
 media/
 staticfiles/
-*.log
+backend/.env
 
 # === Node / React ===
 node_modules/
@@ -69,16 +69,12 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
-# === AWS Amplify ===
-amplify/#current-cloud-backend
-amplify/.config/local-*
-amplify/logs/
-amplify/mock-data/
-amplify/mock-api-resources/
-aws-exports.js
-awsconfiguration.json
-amplifyconfiguration.json
-amplifyconfiguration.dart
-amplify-build-config.json
-amplify-gradle-config.json
-amplifytools.xcconfig
+# === AWS Amplify Gen 2 ===
+.amplify
+amplify_outputs*
+amplifyconfiguration*
+
+# === Vite / Build ===
+dist
+dist-ssr
+*.local
