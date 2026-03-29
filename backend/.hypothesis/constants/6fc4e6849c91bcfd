@@ -1,0 +1,4 @@
+# file: /Users/riosisraelg/Desktop/1/hyperCoreFounding/backend/core/urls.py
+# hypothesis_version: 6.151.10
+
+['auth-login', 'auth-refresh', 'auth/login', 'auth/refresh', 'dashboard', 'draw-execute', 'draw-results', 'draw/execute', 'draw/results', 'ticket-cancel', 'ticket-create', 'ticket-detail', 'ticket-download-pdf', 'ticket-list', 'ticket-reassign', 'tickets', 'tickets/']

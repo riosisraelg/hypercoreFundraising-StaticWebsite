@@ -1,0 +1,4 @@
+# file: /Users/riosisraelg/Desktop/1/hyperCoreFounding/backend/core/serializers.py
+# hypothesis_version: 6.151.10
+
+[200, '-', '-folio', '/', 'FOLIO_PREFIX', 'HC', 'cancelled_at', 'created_at', 'created_by.username', 'created_by_username', 'download_links', 'drawn_at', 'folio', 'full_name', 'google_wallet', 'id', 'pdf', 'phone', 'prize_name', 'prize_rank', 'request', 'status', 'ticket.folio', 'ticket.full_name', 'ticket.phone', 'wallet']

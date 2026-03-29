@@ -1,0 +1,4 @@
+# file: /Users/riosisraelg/Desktop/1/hyperCoreFounding/backend/core/migrations/0001_initial.py
+# hypothesis_version: 6.151.10
+
+[200, 'Active', 'Cancelled', 'DrawResult', 'Ticket', 'active', 'cancelled', 'cancelled_at', 'core.ticket', 'created_at', 'created_by', 'draw_results', 'drawn_at', 'folio', 'full_name', 'id', 'ordering', 'phone', 'prize_name', 'prize_rank', 'status', 'ticket', 'tickets', 'unique_active_folio']

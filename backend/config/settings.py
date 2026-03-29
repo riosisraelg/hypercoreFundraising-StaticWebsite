@@ -89,13 +89,22 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
-    'DEFAULT_THROTTLE_CLASSES': [
-        'rest_framework.throttling.AnonRateThrottle',
-    ],
+    'DEFAULT_THROTTLE_CLASSES': [],
     'DEFAULT_THROTTLE_RATES': {
         'anon': '60/minute',
+        'public': '30/minute',
+        'login': '10/minute',
     },
 }
+
+# Disable throttling during tests so rate-limited endpoints aren't blocked
+import sys
+if 'test' in sys.argv:
+    REST_FRAMEWORK['DEFAULT_THROTTLE_RATES'] = {
+        'anon': None,
+        'public': None,
+        'login': None,
+    }
 
 # --- JWT ---
 SIMPLE_JWT = {
@@ -108,9 +117,12 @@ SIMPLE_JWT = {
 }
 
 # --- CORS ---
-CORS_ALLOWED_ORIGINS = os.getenv(
-    'CORS_ALLOWED_ORIGINS', 'http://localhost:5173'
-).split(',')
+CORS_ALLOWED_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:5173').split(',')
+    if origin.strip()
+]
+CORS_ALLOW_CREDENTIALS = True
 
 # --- App config ---
 TICKET_PRICE_MXN = int(os.getenv('TICKET_PRICE_MXN', '200'))

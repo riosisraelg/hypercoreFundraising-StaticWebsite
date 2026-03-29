@@ -1,0 +1,4 @@
+# file: /Users/riosisraelg/Desktop/1/hyperCoreFounding/backend/core/ticket_generator.py
+# hypothesis_version: 6.151.10
+
+[5.5, 6.5, 16.5, 30.5, 180, '#003a35', '#00534C', '#0d1c2e', '#5a6a7a', '#91d3c9', '#CEF145', '#DCFF52', '#d5e3fc', '#eff4ff', '#f8f9ff', '#ffffff', '...', '2026-04-15', 'FOLIO', 'HYPERCORE', 'Helvetica', 'Helvetica-Bold', 'PARTICIPANTE', 'SORTEO HYPERCORE']

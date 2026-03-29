@@ -1,0 +1,4 @@
+# file: /Users/riosisraelg/Desktop/1/hyperCoreFounding/backend/core/tests.py
+# hypothesis_version: 6.151.10
+
+[201, '+52 1234 5678', '+5211111111', '+5212345678', '+521234567890', '+5222222222', '+5233333333', '--password', '/api/auth/login', '/api/auth/refresh', '/api/tickets', '/api/tickets/', 'A', 'B', 'C', 'CREATED', 'CustomPass99!', 'First Buyer', 'HC-001', 'HC-002', 'HC-003', 'HC-004', 'HC-100', 'HyperCore2026!', 'María López', 'SKIPPED', 'Second Buyer', 'Test User', 'Valid Name', 'abc1234567', 'access', 'admin1', 'admin_dev1', 'admin_val', 'folio', 'full_name', 'invalid-token', 'nobody', 'password', 'pbkdf2_sha256$', 'phone', 'refresh', 'testpass123', 'username', 'wrongpass']

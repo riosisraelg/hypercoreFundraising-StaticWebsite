@@ -1,3 +1,292 @@
-from django.shortcuts import render
+from django.http import HttpResponse
+from django.utils.timezone import now
+from rest_framework import status
+from rest_framework.generics import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-# Create your views here.
+from .models import Ticket
+from .serializers import (
+    TicketCreateSerializer,
+    TicketReassignSerializer,
+    TicketResponseSerializer,
+)
+from .ticket_generator import generate_ticket_pdf
+
+
+class TicketCreateView(APIView):
+    """POST /api/tickets — Register a new ticket (admin only)."""
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = TicketCreateSerializer(
+            data=request.data,
+            context={'request': request},
+        )
+        serializer.is_valid(raise_exception=True)
+        ticket = serializer.save()
+        response_serializer = TicketResponseSerializer(
+            ticket, context={'request': request},
+        )
+        return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+
+
+class TicketListView(APIView):
+    """GET /api/tickets — List all tickets (active + cancelled)."""
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        tickets = Ticket.objects.select_related('created_by').all()
+        serializer = TicketResponseSerializer(
+            tickets, many=True, context={'request': request},
+        )
+        return Response(serializer.data)
+
+
+class TicketDetailView(APIView):
+    """GET /api/tickets/:id — Get full ticket details."""
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, ticket_id):
+        ticket = get_object_or_404(
+            Ticket.objects.select_related('created_by'), pk=ticket_id,
+        )
+        serializer = TicketResponseSerializer(
+            ticket, context={'request': request},
+        )
+        return Response(serializer.data)
+
+
+class TicketCancelView(APIView):
+    """PATCH /api/tickets/:id/cancel — Cancel an active ticket."""
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request, ticket_id):
+        ticket = get_object_or_404(
+            Ticket.objects.select_related('created_by'), pk=ticket_id,
+        )
+
+        if ticket.status == Ticket.Status.CANCELLED:
+            return Response(
+                {'detail': 'Ticket is already cancelled.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        ticket.status = Ticket.Status.CANCELLED
+        ticket.cancelled_at = now()
+        ticket.save(update_fields=['status', 'cancelled_at'])
+
+        serializer = TicketResponseSerializer(
+            ticket, context={'request': request},
+        )
+        return Response(serializer.data)
+
+
+class TicketReassignView(APIView):
+    """POST /api/tickets/:id/reassign — Reassign a cancelled folio to a new buyer."""
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, ticket_id):
+        original_ticket = get_object_or_404(
+            Ticket.objects.select_related('created_by'), pk=ticket_id,
+        )
+
+        # Only cancelled tickets can have their folio reassigned
+        if original_ticket.status == Ticket.Status.ACTIVE:
+            return Response(
+                {'detail': 'Cannot reassign an active folio. Cancel the ticket first.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Validate new buyer data
+        serializer = TicketReassignSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # Double-check no active ticket already holds this folio (DB constraint also enforces this)
+        if Ticket.objects.filter(folio=original_ticket.folio, status=Ticket.Status.ACTIVE).exists():
+            return Response(
+                {'detail': 'This folio is already assigned to an active ticket.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Create a new active ticket reusing the folio
+        new_ticket = Ticket.objects.create(
+            folio=original_ticket.folio,
+            full_name=serializer.validated_data['full_name'],
+            phone=serializer.validated_data['phone'],
+            status=Ticket.Status.ACTIVE,
+            created_by=request.user,
+        )
+
+        response_serializer = TicketResponseSerializer(
+            new_ticket, context={'request': request},
+        )
+        return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+
+
+
+class TicketDownloadPDFView(APIView):
+    """GET /api/tickets/:id/download/pdf — Download ticket as PDF."""
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, ticket_id):
+        ticket = get_object_or_404(Ticket, pk=ticket_id)
+        pdf_bytes = generate_ticket_pdf(ticket)
+        response = HttpResponse(pdf_bytes, content_type='application/pdf')
+        response['Content-Disposition'] = (
+            f'attachment; filename="ticket-{ticket.folio}.pdf"'
+        )
+        return response
+
+
+class TicketDownloadWalletView(APIView):
+    """GET /api/tickets/:id/download/wallet — Download Apple Wallet pass (.pkpass).
+
+    Stub for MVP: Apple Wallet .pkpass generation requires signing
+    certificates (Apple Developer account + pass type ID + certificate).
+    Returns a 501 until credentials are configured.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, ticket_id):
+        ticket = get_object_or_404(Ticket, pk=ticket_id)
+        return Response(
+            {
+                'detail': (
+                    'Apple Wallet pass generation is not yet configured. '
+                    'Signing certificates are required. '
+                    f'Ticket {ticket.folio} is valid — use the PDF download instead.'
+                ),
+                'folio': ticket.folio,
+            },
+            status=status.HTTP_501_NOT_IMPLEMENTED,
+        )
+
+
+class TicketDownloadGoogleWalletView(APIView):
+    """GET /api/tickets/:id/download/google-wallet — Google Wallet pass.
+
+    Stub for MVP: Google Wallet pass generation requires a Google Cloud
+    service account and Wallet API credentials. Returns a 501 until
+    credentials are configured.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, ticket_id):
+        ticket = get_object_or_404(Ticket, pk=ticket_id)
+        return Response(
+            {
+                'detail': (
+                    'Google Wallet pass generation is not yet configured. '
+                    'API credentials are required. '
+                    f'Ticket {ticket.folio} is valid — use the PDF download instead.'
+                ),
+                'folio': ticket.folio,
+            },
+            status=status.HTTP_501_NOT_IMPLEMENTED,
+        )
+
+
+from rest_framework.permissions import AllowAny
+
+from .draw_engine import DrawError, execute_draw
+from .models import DrawResult
+from .serializers import (
+    DashboardSerializer,
+    DrawExecuteSerializer,
+    DrawResultPublicSerializer,
+    DrawResultResponseSerializer,
+)
+from .throttles import LoginThrottle, PublicEndpointThrottle
+
+
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+
+class ThrottledTokenObtainPairView(TokenObtainPairView):
+    """Login endpoint with rate limiting (Req 11.3)."""
+    throttle_classes = [LoginThrottle]
+
+TICKET_PRICE_MXN = 200
+FUNDRAISING_GOAL_MXN = 26_000
+
+
+class DrawExecuteView(APIView):
+    """POST /api/draw/execute — Execute the draw (admin only)."""
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = DrawExecuteSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        existing_results = DrawResult.objects.exists()
+
+        if existing_results:
+            confirmation = serializer.validated_data.get("confirmation", "")
+            if confirmation != "rewrite draw":
+                return Response(
+                    {
+                        "detail": (
+                            "Draw has already been executed. "
+                            'Send {"confirmation": "rewrite draw"} to re-run.'
+                        ),
+                        "already_executed": True,
+                    },
+                    status=status.HTTP_409_CONFLICT,
+                )
+            # Delete previous results before re-running
+            DrawResult.objects.all().delete()
+
+        try:
+            winners = execute_draw()
+        except DrawError as exc:
+            return Response(
+                {"detail": str(exc)},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Store DrawResult records
+        draw_results = []
+        for winner in winners:
+            result = DrawResult.objects.create(
+                ticket=winner["ticket"],
+                prize_rank=winner["prize_rank"],
+                prize_name=winner["prize_name"],
+            )
+            draw_results.append(result)
+
+        response_serializer = DrawResultResponseSerializer(
+            draw_results, many=True,
+        )
+        return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+
+
+class DrawResultsPublicView(APIView):
+    """GET /api/draw/results — Public draw results (folio + prize only)."""
+    permission_classes = [AllowAny]
+    throttle_classes = [PublicEndpointThrottle]
+
+    def get(self, request):
+        results = DrawResult.objects.select_related('ticket').all()
+        if not results.exists():
+            return Response({"results": [], "message": "No draw has been executed yet."})
+        serializer = DrawResultPublicSerializer(results, many=True)
+        return Response({"results": serializer.data})
+
+
+class DashboardView(APIView):
+    """GET /api/dashboard — Fundraising progress (public)."""
+    permission_classes = [AllowAny]
+    throttle_classes = [PublicEndpointThrottle]
+
+    def get(self, request):
+        active_count = Ticket.objects.filter(status=Ticket.Status.ACTIVE).count()
+        total_raised = active_count * TICKET_PRICE_MXN
+        data = {
+            "active_tickets": active_count,
+            "total_raised": total_raised,
+            "goal": FUNDRAISING_GOAL_MXN,
+        }
+        serializer = DashboardSerializer(data)
+        return Response(serializer.data)

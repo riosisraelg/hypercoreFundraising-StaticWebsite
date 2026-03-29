@@ -1,0 +1,79 @@
+/* ── Results Page ── */
+
+.results-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+.results-loading {
+  font-size: var(--body-md);
+  color: var(--on-surface-variant);
+}
+
+/* Winner cards */
+.results-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-6);
+}
+
+.result-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-8) var(--spacing-4);
+  text-align: center;
+}
+
+.result-emoji {
+  font-size: 2.5rem;
+}
+
+.result-rank {
+  font-size: var(--label-lg);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--label-md-ls);
+  color: var(--on-surface-variant);
+}
+
+.result-folio {
+  font-family: var(--font-display);
+  font-size: var(--headline-md);
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.result-prize {
+  font-size: var(--body-lg);
+  color: var(--on-surface);
+  font-weight: 500;
+}
+
+.results-note {
+  font-size: var(--body-md);
+  color: var(--on-surface-variant);
+  max-width: 36rem;
+}
+
+/* Empty state */
+.results-empty {
+  padding: var(--spacing-12) var(--spacing-6);
+  background: var(--surface-container-low);
+  border-radius: var(--rounded-lg);
+  text-align: center;
+}
+
+.results-empty-text {
+  font-size: var(--body-lg);
+  color: var(--on-surface-variant);
+}
+
+@media (max-width: 768px) {
+  .results-list {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-4);
+  }
+}

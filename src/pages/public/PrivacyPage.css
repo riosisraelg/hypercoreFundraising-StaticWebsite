@@ -1,0 +1,29 @@
+/* ── Privacy Page ── */
+
+.privacy-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+.privacy-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  max-width: 40rem;
+}
+
+.privacy-section p {
+  font-size: var(--body-lg);
+  line-height: var(--body-lg-lh);
+  color: var(--on-surface-variant);
+}
+
+.privacy-subtitle {
+  font-family: var(--font-display);
+  font-size: var(--title-lg);
+  font-weight: 600;
+  line-height: var(--title-lg-lh);
+  color: var(--on-surface);
+  margin-bottom: var(--spacing-2);
+}
