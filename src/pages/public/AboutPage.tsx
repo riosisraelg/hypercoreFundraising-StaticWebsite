@@ -30,10 +30,10 @@ const TEAM_MEMBERS: TeamMember[] = [
     initials: "M3",
   },
   {
-    name: "Miembro 4",
+    name: "Diego Santiago Saucedo García",
     role: "Ingeniería en Sistemas",
-    linkedin: "https://linkedin.com/in/miembro4",
-    initials: "M4",
+    linkedin: "https://www.linkedin.com/in/diego-saucedo-garc%C3%ADa-3a485b337",
+    initials: "DS",
   },
   {
     name: "Miembro 5",
