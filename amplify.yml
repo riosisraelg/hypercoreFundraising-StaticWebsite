@@ -8,6 +8,7 @@ frontend:
         - npm install
     build:
       commands:
+        - echo "VITE_API_URL=https://d3uu50tlzv08gz.cloudfront.net/api" > .env.production
         - npm run build
   artifacts:
     baseDirectory: dist

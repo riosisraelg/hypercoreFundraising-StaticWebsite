@@ -12,15 +12,16 @@ const TEAM_MEMBERS: TeamMember[] = [
   {
     name: "Fernando Israel Rios Garcia",
     role: "Desarrollo de Software",
-    linkedin: "https://www.linkedin.com/in/riosisraelg/",
+    linkedin: "https://www.linkedin.com/posts/riosisraelg_i-am-happy-of-participating-in-innovation-activity-7444273333631746049-kodH",
     initials: "IR",
     photo: "/team/israel.jpg",
   },
   {
-    name: "Miembro 2",
+    name: "Mariana Lopez Garcia",
     role: "Ingeniería Mecatrónica",
-    linkedin: "https://linkedin.com/in/miembro2",
-    initials: "M2",
+    linkedin: "https://www.linkedin.com/posts/mariana-lopez-garcia-40b960348_reconocimiento-imu2026-activity-7444445164384849920-48H4",
+    initials: "ML",
+    photo: "/team/mariana.jpeg",
   },
   {
     name: "Miembro 3",
