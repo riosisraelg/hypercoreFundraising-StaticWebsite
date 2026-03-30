@@ -1,0 +1,4 @@
+# file: /Users/riosisraelg/Desktop/1/hyperCoreFounding/backend/core/views.py
+# hypothesis_version: 6.151.10
+
+[200, 26000, 'Content-Disposition', 'active_tickets', 'already_executed', 'application/pdf', 'cancelled_at', 'confirmation', 'created_by', 'detail', 'folio', 'full_name', 'goal', 'message', 'phone', 'prize_name', 'prize_rank', 'request', 'results', 'rewrite draw', 'status', 'ticket', 'total_raised']

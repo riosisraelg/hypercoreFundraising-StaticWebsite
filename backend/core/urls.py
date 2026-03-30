@@ -9,6 +9,7 @@ urlpatterns = [
     path('auth/refresh', TokenRefreshView.as_view(), name='auth-refresh'),
     # Tickets (admin)
     path('tickets', views.TicketCreateView.as_view(), name='ticket-create'),
+    path('tickets/bulk', views.TicketBulkCreateView.as_view(), name='ticket-bulk-create'),
     path('tickets/', views.TicketListView.as_view(), name='ticket-list'),
     path('tickets/<uuid:ticket_id>', views.TicketDetailView.as_view(), name='ticket-detail'),
     path('tickets/<uuid:ticket_id>/cancel', views.TicketCancelView.as_view(), name='ticket-cancel'),
