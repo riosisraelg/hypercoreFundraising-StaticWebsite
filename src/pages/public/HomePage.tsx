@@ -38,7 +38,7 @@ export default function HomePage() {
     <div className="home-page">
       {/* Hero */}
       <section className="hero-section">
-        <span className="hero-badge">Sorteo Benéfico 2026</span>
+        <span className="hero-badge">Sorteo Benéfico — 25 de Abril, 6:00 PM</span>
         <h1 className="hero-title">
           Apoya a Team HyperCore rumbo a Cancún
         </h1>

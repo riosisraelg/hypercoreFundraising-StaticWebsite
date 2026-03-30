@@ -22,7 +22,7 @@ from reportlab.graphics import renderPDF
 
 # Draw event constants
 DRAW_TITLE = "Sorteo HyperCore — Innovation MeetUp 2026"
-DRAW_DATE = "2026-04-15"
+DRAW_DATE = "25 de Abril, 2026 — 6:00 PM"
 BRAND_NAME = "HYPERCORE"
 BRAND_TAGLINE = "UNIVERSIDAD TECMILENIO"
 CHALLENGE_NAME = "KIA Challenge: Digital Paintshop"
