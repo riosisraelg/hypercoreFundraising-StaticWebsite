@@ -58,13 +58,28 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# Database — SQLite for MVP
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# Database — PostgreSQL for production, SQLite for local dev
+DATABASE_URL = os.getenv('DATABASE_URL', '')
+if DATABASE_URL:
+    # Production: parse DATABASE_URL or use RDS env vars from Elastic Beanstalk
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('RDS_DB_NAME', 'hypercore_draw'),
+            'USER': os.getenv('RDS_USERNAME', 'postgres'),
+            'PASSWORD': os.getenv('RDS_PASSWORD', ''),
+            'HOST': os.getenv('RDS_HOSTNAME', 'localhost'),
+            'PORT': os.getenv('RDS_PORT', '5432'),
+        }
     }
-}
+else:
+    # Local dev: SQLite
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -79,6 +94,7 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # --- Django REST Framework ---

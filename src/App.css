@@ -623,6 +623,65 @@
   flex-direction: column;
 }
 
+/* Mode selector */
+.mode-selector {
+  display: flex;
+  gap: var(--spacing-2);
+}
+
+.mode-btn {
+  padding: var(--spacing-2) var(--spacing-4);
+  border: none;
+  border-radius: var(--rounded-md);
+  background: var(--surface-container-low);
+  color: var(--on-surface);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.mode-btn.active {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+.form-group-row {
+  display: flex;
+  gap: var(--spacing-4);
+}
+
+.form-group-row .form-group {
+  flex: 1;
+}
+
+/* Bulk results */
+.bulk-results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  max-height: 20rem;
+  overflow-y: auto;
+}
+
+.bulk-result-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  padding: var(--spacing-2) var(--spacing-3);
+  background: var(--surface-container-low);
+  border-radius: var(--rounded-md);
+}
+
+.bulk-result-row .ticket-folio {
+  font-size: 0.9rem;
+  min-width: 5rem;
+}
+
+.btn-sm {
+  padding: var(--spacing-1) var(--spacing-3);
+  font-size: 0.75rem;
+}
+
 .ticket-success {
   display: flex;
   flex-direction: column;

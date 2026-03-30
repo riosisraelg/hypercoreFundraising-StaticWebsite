@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import PublicLayout from "./layouts/PublicLayout";
 import AdminLayout from "./layouts/AdminLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -29,6 +29,7 @@ function App() {
       {/* Protected admin routes */}
       <Route path="/admin" element={<ProtectedRoute />}>
         <Route element={<AdminLayout />}>
+          <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<DashboardPage />} />
           <Route path="tickets" element={<TicketListPage />} />
           <Route path="tickets/new" element={<TicketNewPage />} />

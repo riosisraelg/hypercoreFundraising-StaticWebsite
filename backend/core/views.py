@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 
 from .models import Ticket
 from .serializers import (
+    TicketBulkCreateSerializer,
     TicketCreateSerializer,
     TicketReassignSerializer,
     TicketResponseSerializer,
@@ -30,6 +31,29 @@ class TicketCreateView(APIView):
             ticket, context={'request': request},
         )
         return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+
+
+    class TicketBulkCreateView(APIView):
+        """POST /api/tickets/bulk — Register multiple tickets at once (admin only).
+
+        Accepts a buyer name, phone, and either:
+        - folio_numbers: [1, 5, 10] → creates HC-001, HC-005, HC-010
+        - folio_from + folio_to: 1, 30 → creates HC-001 through HC-030
+        """
+        permission_classes = [IsAuthenticated]
+
+        def post(self, request):
+            serializer = TicketBulkCreateSerializer(
+                data=request.data,
+                context={'request': request},
+            )
+            serializer.is_valid(raise_exception=True)
+            tickets = serializer.save()
+            response_serializer = TicketResponseSerializer(
+                tickets, many=True, context={'request': request},
+            )
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+
 
 
 class TicketListView(APIView):
