@@ -1,11 +1,18 @@
 import { useEffect, useState } from "react";
 import { api } from "../../lib/api";
+import FolioGrid from "../../components/FolioGrid";
 import "./HomePage.css";
+
+interface FolioCell {
+  number: number;
+  status: "available" | "sold" | "cancelled";
+}
 
 interface DashboardData {
   active_tickets: number;
   total_raised: number;
   goal: number;
+  grid: FolioCell[];
 }
 
 export default function HomePage() {
@@ -117,6 +124,9 @@ export default function HomePage() {
           </div>
         ) : (
           <p className="dashboard-error">No se pudieron cargar los datos.</p>
+        )}
+        {dashboard?.grid && (
+          <FolioGrid grid={dashboard.grid} title="¡Escoge tu boleto!" />
         )}
       </section>
 

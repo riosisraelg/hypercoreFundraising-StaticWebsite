@@ -1,0 +1,87 @@
+.folio-grid-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.folio-legend {
+  display: flex;
+  gap: var(--spacing-6);
+  font-size: var(--body-sm);
+  color: var(--on-surface-variant);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.legend-dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: var(--rounded-sm);
+}
+
+.legend-dot.available {
+  background: var(--surface-container-low);
+  outline: 1px solid var(--outline-variant);
+}
+
+.legend-dot.sold {
+  background: var(--primary);
+}
+
+.legend-dot.cancelled {
+  background: var(--error, #ba1a1a);
+}
+
+.folio-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 3px;
+}
+
+.folio-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  font-size: 0.7rem;
+  font-weight: 600;
+  border-radius: var(--rounded-sm);
+  cursor: default;
+  transition: transform 0.1s;
+}
+
+.folio-cell:hover {
+  transform: scale(1.15);
+  z-index: 1;
+}
+
+.folio-available {
+  background: var(--surface-container-low);
+  color: var(--on-surface-variant);
+}
+
+.folio-sold {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+.folio-cancelled {
+  background: var(--error, #ba1a1a);
+  color: #fff;
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  .folio-grid {
+    grid-template-columns: repeat(10, 1fr);
+    gap: 2px;
+  }
+
+  .folio-cell {
+    font-size: 0.6rem;
+  }
+}

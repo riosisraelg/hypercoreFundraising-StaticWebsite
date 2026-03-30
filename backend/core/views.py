@@ -307,10 +307,33 @@ class DashboardView(APIView):
     def get(self, request):
         active_count = Ticket.objects.filter(status=Ticket.Status.ACTIVE).count()
         total_raised = active_count * TICKET_PRICE_MXN
+
+        # Build folio grid (1-200)
+        prefix = getattr(settings, 'FOLIO_PREFIX', 'HC')
+        total_folios = 200
+        active_folios = set(
+            Ticket.objects.filter(status=Ticket.Status.ACTIVE)
+            .values_list('folio', flat=True)
+        )
+        cancelled_folios = set(
+            Ticket.objects.filter(status=Ticket.Status.CANCELLED)
+            .values_list('folio', flat=True)
+        ) - active_folios  # exclude if re-assigned
+
+        grid = []
+        for i in range(1, total_folios + 1):
+            folio = f"{prefix}-{i:03d}"
+            if folio in active_folios:
+                grid.append({"number": i, "status": "sold"})
+            elif folio in cancelled_folios:
+                grid.append({"number": i, "status": "cancelled"})
+            else:
+                grid.append({"number": i, "status": "available"})
+
         data = {
             "active_tickets": active_count,
             "total_raised": total_raised,
             "goal": FUNDRAISING_GOAL_MXN,
+            "grid": grid,
         }
-        serializer = DashboardSerializer(data)
-        return Response(serializer.data)
+        return Response(data)

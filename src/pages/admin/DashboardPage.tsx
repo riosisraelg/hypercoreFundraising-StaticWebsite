@@ -1,11 +1,18 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../../lib/api";
+import FolioGrid from "../../components/FolioGrid";
+
+interface FolioCell {
+  number: number;
+  status: "available" | "sold" | "cancelled";
+}
 
 interface DashboardData {
   active_tickets: number;
   total_raised: number;
   goal: number;
+  grid: FolioCell[];
 }
 
 interface Ticket {
@@ -97,6 +104,13 @@ export default function DashboardPage() {
           Ejecutar Sorteo
         </Link>
       </div>
+
+      {/* Folio grid */}
+      {dashboard?.grid && (
+        <div className="card">
+          <FolioGrid grid={dashboard.grid} title="Mapa de boletos" />
+        </div>
+      )}
 
       {/* Recent tickets */}
       <div className="card">
