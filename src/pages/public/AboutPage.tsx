@@ -5,18 +5,20 @@ interface TeamMember {
   role: string;
   linkedin: string;
   initials: string;
+  photo?: string;
 }
 
 const TEAM_MEMBERS: TeamMember[] = [
   {
-    name: "Miembro 1",
-    role: "Ingeniería Mecatrónica",
-    linkedin: "https://linkedin.com/in/miembro1",
-    initials: "M1",
+    name: "Fernando Israel Rios Garcia",
+    role: "Desarrollo de Software",
+    linkedin: "https://www.linkedin.com/in/riosisraelg/",
+    initials: "IR",
+    photo: "/team/israel.jpg",
   },
   {
     name: "Miembro 2",
-    role: "Desarrollo de Software",
+    role: "Ingeniería Mecatrónica",
     linkedin: "https://linkedin.com/in/miembro2",
     initials: "M2",
   },
@@ -76,9 +78,17 @@ export default function AboutPage() {
         <div className="team-grid">
           {TEAM_MEMBERS.map((member) => (
             <article key={member.name} className="team-card card-elevated">
-              <div className="team-avatar" aria-hidden="true">
-                {member.initials}
-              </div>
+              {member.photo ? (
+                <img
+                  src={member.photo}
+                  alt={member.name}
+                  className="team-photo"
+                />
+              ) : (
+                <div className="team-avatar" aria-hidden="true">
+                  {member.initials}
+                </div>
+              )}
               <span className="team-name">{member.name}</span>
               <span className="team-role">{member.role}</span>
               <a

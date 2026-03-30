@@ -61,6 +61,14 @@
   margin-bottom: var(--spacing-2);
 }
 
+.team-photo {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: var(--spacing-2);
+}
+
 .team-name {
   font-weight: 600;
   color: var(--on-surface);
