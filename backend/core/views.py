@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.http import HttpResponse
 from django.utils.timezone import now
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
@@ -242,17 +244,53 @@ FUNDRAISING_GOAL_MXN = 52_000
 
 
 class DrawExecuteView(APIView):
-    """POST /api/draw/execute — Execute the draw (admin only)."""
+    """POST /api/draw/execute — Execute the draw (admin only).
+
+    Validations:
+    1. Cannot execute before April 25, 2026 6:00 PM CST
+    2. Returns info about unsold/cancelled tickets for confirmation
+    3. Requires "rewrite draw" confirmation to re-run
+    """
     permission_classes = [IsAuthenticated]
+
+    # Draw date: April 25, 2026 at 6:00 PM Mexico City time
+    DRAW_DATETIME = datetime(2026, 4, 25, 18, 0, 0, tzinfo=ZoneInfo("America/Mexico_City"))
 
     def post(self, request):
         serializer = DrawExecuteSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
+        # Validation 1: Cannot execute before the draw date
+        now_mx = datetime.now(ZoneInfo("America/Mexico_City"))
+        if now_mx < self.DRAW_DATETIME:
+            time_remaining = self.DRAW_DATETIME - now_mx
+            days = time_remaining.days
+            hours, remainder = divmod(time_remaining.seconds, 3600)
+            minutes = remainder // 60
+            return Response(
+                {
+                    "detail": (
+                        f"El sorteo no se puede ejecutar antes del 25 de Abril de 2026 a las 6:00 PM. "
+                        f"Faltan {days} días, {hours} horas y {minutes} minutos."
+                    ),
+                    "draw_date": "2026-04-25T18:00:00-06:00",
+                    "blocked": True,
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        # Validation 2: Check for unsold/cancelled tickets and require confirmation
+        total_folios = 200
+        active_count = Ticket.objects.filter(status=Ticket.Status.ACTIVE).count()
+        cancelled_count = Ticket.objects.filter(status=Ticket.Status.CANCELLED).count()
+        unsold_count = total_folios - active_count - cancelled_count
+
+        confirmation = serializer.validated_data.get("confirmation", "")
+
+        # Check if draw already exists
         existing_results = DrawResult.objects.exists()
 
         if existing_results:
-            confirmation = serializer.validated_data.get("confirmation", "")
             if confirmation != "rewrite draw":
                 return Response(
                     {
@@ -264,8 +302,25 @@ class DrawExecuteView(APIView):
                     },
                     status=status.HTTP_409_CONFLICT,
                 )
-            # Delete previous results before re-running
             DrawResult.objects.all().delete()
+        elif confirmation != "confirmar sorteo":
+            # First-time draw: require explicit confirmation with ticket stats
+            return Response(
+                {
+                    "detail": (
+                        f"Confirma la ejecución del sorteo. "
+                        f"Boletos activos: {active_count}, "
+                        f"cancelados: {cancelled_count}, "
+                        f"sin vender: {unsold_count} de {total_folios}."
+                    ),
+                    "requires_confirmation": True,
+                    "active_tickets": active_count,
+                    "cancelled_tickets": cancelled_count,
+                    "unsold_tickets": unsold_count,
+                    "total_folios": total_folios,
+                },
+                status=status.HTTP_428_PRECONDITION_REQUIRED,
+            )
 
         try:
             winners = execute_draw()
@@ -275,7 +330,6 @@ class DrawExecuteView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # Store DrawResult records
         draw_results = []
         for winner in winners:
             result = DrawResult.objects.create(
