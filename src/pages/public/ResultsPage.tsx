@@ -20,10 +20,28 @@ const RANK_LABEL: Record<number, string> = {
   3: "3er Lugar",
 };
 
+const DRAW_DATE = new Date("2026-04-25T18:00:00-06:00"); // April 25, 6PM CST
+
+function getCountdown() {
+  const now = new Date();
+  const diff = DRAW_DATE.getTime() - now.getTime();
+  if (diff <= 0) return null;
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  return { days, hours, minutes };
+}
+
 export default function ResultsPage() {
   const [results, setResults] = useState<DrawResultPublic[]>([]);
   const [loading, setLoading] = useState(true);
   const [drawn, setDrawn] = useState(false);
+  const [countdown, setCountdown] = useState(getCountdown());
+
+  useEffect(() => {
+    const timer = setInterval(() => setCountdown(getCountdown()), 60000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     api
@@ -68,6 +86,23 @@ export default function ResultsPage() {
         </>
       ) : (
         <div className="results-empty">
+          <p className="results-date">📅 25 de Abril, 2026 — 6:00 PM</p>
+          {countdown && (
+            <div className="countdown">
+              <div className="countdown-block">
+                <span className="countdown-value">{countdown.days}</span>
+                <span className="countdown-label">días</span>
+              </div>
+              <div className="countdown-block">
+                <span className="countdown-value">{countdown.hours}</span>
+                <span className="countdown-label">horas</span>
+              </div>
+              <div className="countdown-block">
+                <span className="countdown-value">{countdown.minutes}</span>
+                <span className="countdown-label">min</span>
+              </div>
+            </div>
+          )}
           <p className="results-empty-text">
             El sorteo aún no se ha realizado. ¡Mantente atento!
           </p>

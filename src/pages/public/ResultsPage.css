@@ -64,6 +64,44 @@
   background: var(--surface-container-low);
   border-radius: var(--rounded-lg);
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-6);
+}
+
+.results-date {
+  font-family: var(--font-display);
+  font-size: var(--headline-sm);
+  font-weight: 700;
+  color: var(--on-surface);
+}
+
+.countdown {
+  display: flex;
+  gap: var(--spacing-6);
+}
+
+.countdown-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-1);
+}
+
+.countdown-value {
+  font-family: var(--font-display);
+  font-size: var(--display-sm);
+  font-weight: 700;
+  color: var(--primary);
+  line-height: 1;
+}
+
+.countdown-label {
+  font-size: var(--label-md);
+  text-transform: uppercase;
+  letter-spacing: var(--label-md-ls);
+  color: var(--on-surface-variant);
 }
 
 .results-empty-text {

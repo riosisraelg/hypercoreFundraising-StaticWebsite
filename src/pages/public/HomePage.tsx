@@ -40,15 +40,17 @@ export default function HomePage() {
     <div className="home-page">
       {/* Hero */}
       <section className="hero-section">
-        <span className="hero-badge">Sorteo Benéfico — 25 de Abril, 6:00 PM</span>
+        <span className="hero-badge">🎟️ Rifa Benéfica — 25 de Abril, 6:00 PM</span>
         <h1 className="hero-title">
-          Apoya a Team HyperCore rumbo a Cancún
+          ¡Compra tu boleto y gana premios!
         </h1>
         <p className="hero-description">
-          Somos un equipo de ingenieros de la Universidad Tecmilenio clasificados
-          a la final nacional del KIA Mexico Innovation MeetUp 2026. Compra un
-          boleto de $200 MXN y participa por increíbles premios mientras nos
-          ayudas a llegar a Cancún.
+          Rifa benéfica de Team HyperCore (Universidad Tecmilenio). 
+          Solo 200 boletos a $200 MXN cada uno. Escoge tu número, 
+          paga por transferencia o efectivo, y participa por 3 premios. 
+          El sorteo se realiza el 25 de abril a las 6:00 PM en vivo.
+          Todos los fondos van para nuestra participación en la final 
+          nacional del KIA Mexico Innovation MeetUp 2026 en Cancún.
         </p>
         <a
           href="https://wa.me/5214421206701"
@@ -56,7 +58,7 @@ export default function HomePage() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Comprar boleto por WhatsApp
+          🎟️ Comprar boleto por WhatsApp
         </a>
       </section>
 
@@ -149,41 +151,50 @@ export default function HomePage() {
 
       {/* How to participate */}
       <section className="participate-section">
-        <h2 className="section-title">¿Cómo participar?</h2>
+        <h2 className="section-title">¿Cómo funciona la rifa?</h2>
         <ol className="steps-list">
           <li className="step-item">
             <span className="step-number">1</span>
             <div>
-              <span className="step-title">Contáctanos</span>
+              <span className="step-title">Escoge tu número</span>
               <span className="step-desc">
-                Escríbenos por WhatsApp para apartar tu boleto.
+                Revisa la tabla de boletos arriba y elige los números disponibles que quieras.
               </span>
             </div>
           </li>
           <li className="step-item">
             <span className="step-number">2</span>
             <div>
-              <span className="step-title">Realiza tu pago</span>
+              <span className="step-title">Escríbenos por WhatsApp</span>
               <span className="step-desc">
-                Cada boleto cuesta $200 MXN. Aceptamos efectivo y transferencia.
+                Mándanos mensaje con tu nombre, teléfono y los números que quieres. Puedes comprar varios boletos.
               </span>
             </div>
           </li>
           <li className="step-item">
             <span className="step-number">3</span>
             <div>
-              <span className="step-title">Recibe tu boleto digital</span>
+              <span className="step-title">Paga $200 MXN por boleto</span>
               <span className="step-desc">
-                Te enviaremos tu boleto con folio único en PDF o pase de wallet.
+                Aceptamos transferencia bancaria o efectivo. Te confirmamos el pago y apartamos tus números.
               </span>
             </div>
           </li>
           <li className="step-item">
             <span className="step-number">4</span>
             <div>
-              <span className="step-title">Espera el sorteo</span>
+              <span className="step-title">Recibe tu boleto digital</span>
               <span className="step-desc">
-                Los resultados se publicarán en esta página. ¡Buena suerte!
+                Te enviamos un PDF con tu folio único como comprobante de participación.
+              </span>
+            </div>
+          </li>
+          <li className="step-item">
+            <span className="step-number">5</span>
+            <div>
+              <span className="step-title">Sorteo el 25 de Abril, 6 PM</span>
+              <span className="step-desc">
+                Se eligen 3 ganadores al azar. Los resultados se publican aquí y contactamos a los ganadores por WhatsApp.
               </span>
             </div>
           </li>

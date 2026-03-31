@@ -3,7 +3,26 @@
 .about-page {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-16);
+  gap: var(--spacing-8);
+}
+
+.about-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-10);
+  align-items: start;
+}
+
+.about-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-10);
+}
+
+.about-team-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
 }
 
 .about-lead {
@@ -32,9 +51,9 @@
 /* Team grid */
 .team-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
-  gap: var(--spacing-6);
-  margin-bottom: var(--spacing-6);
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-4);
 }
 
 .team-card {
@@ -93,6 +112,10 @@
 }
 
 @media (max-width: 768px) {
+  .about-layout {
+    grid-template-columns: 1fr;
+  }
+
   .team-grid {
     grid-template-columns: 1fr 1fr;
   }

@@ -120,6 +120,12 @@ export default function DashboardPage() {
           <span><span className="legend-dot-bar raffle" /> Sorteo (neto)</span>
           <span><span className="legend-dot-bar extra" /> Otros</span>
         </div>
+        <p className="progress-text-admin">
+          ${(dashboard?.total_raised ?? 0).toLocaleString("es-MX")} de ${(dashboard?.goal ?? 0).toLocaleString("es-MX")} ({progress.toFixed(0)}%)
+        </p>
+        <p className="transparency-note-admin">
+          Venta bruta: ${(dashboard?.raffle_gross ?? 0).toLocaleString("es-MX")} − Premios: ${(dashboard?.prize_costs ?? 0).toLocaleString("es-MX")} = Neto: ${(dashboard?.raffle_net ?? 0).toLocaleString("es-MX")}
+        </p>
       </div>
 
       {/* Quick actions */}
