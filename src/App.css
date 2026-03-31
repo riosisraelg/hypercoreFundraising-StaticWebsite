@@ -446,6 +446,24 @@
   gap: var(--spacing-2);
 }
 
+.extra-display-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.extra-edit-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.extra-edit-row .input-sm {
+  width: 7rem;
+  padding: var(--spacing-1) var(--spacing-2);
+  font-size: var(--body-md);
+}
+
 .stat-value {
   font-family: var(--font-display);
   font-size: var(--headline-md);
@@ -591,6 +609,15 @@
   padding: var(--spacing-3) var(--spacing-4);
   border-bottom: 1px solid var(--ghost-border);
   vertical-align: middle;
+}
+
+.sortable-th {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sortable-th:hover {
+  color: var(--primary);
 }
 
 .admin-table tbody tr:hover {

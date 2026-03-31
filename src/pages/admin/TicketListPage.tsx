@@ -16,6 +16,8 @@ interface Ticket {
 }
 
 type StatusFilter = "all" | "active" | "cancelled";
+type SortKey = "folio" | "full_name" | "created_at";
+type SortDir = "asc" | "desc";
 
 export default function TicketListPage() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
@@ -28,6 +30,8 @@ export default function TicketListPage() {
   const [editId, setEditId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
   const [editPhone, setEditPhone] = useState("");
+  const [sortKey, setSortKey] = useState<SortKey>("created_at");
+  const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [error, setError] = useState("");
 
   async function loadTickets() {
@@ -45,10 +49,30 @@ export default function TicketListPage() {
     loadTickets();
   }, []);
 
-  // Sort by date descending (newest first)
-  const sorted = [...tickets].sort(
-    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-  );
+  // Sort by selected column
+  function toggleSort(key: SortKey) {
+    if (sortKey === key) {
+      setSortDir(sortDir === "asc" ? "desc" : "asc");
+    } else {
+      setSortKey(key);
+      setSortDir(key === "created_at" ? "desc" : "asc");
+    }
+  }
+
+  const sortIndicator = (key: SortKey) =>
+    sortKey === key ? (sortDir === "asc" ? " ▲" : " ▼") : "";
+
+  const sorted = [...tickets].sort((a, b) => {
+    let cmp = 0;
+    if (sortKey === "folio") {
+      cmp = a.folio.localeCompare(b.folio, undefined, { numeric: true });
+    } else if (sortKey === "full_name") {
+      cmp = a.full_name.localeCompare(b.full_name, "es");
+    } else {
+      cmp = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+    }
+    return sortDir === "asc" ? cmp : -cmp;
+  });
 
   const filtered = sorted.filter((t) => {
     if (filter === "all") return true;
@@ -294,11 +318,17 @@ export default function TicketListPage() {
           <table className="admin-table">
             <thead>
               <tr>
-                <th>Folio</th>
-                <th>Nombre</th>
+                <th className="sortable-th" onClick={() => toggleSort("folio")}>
+                  Folio{sortIndicator("folio")}
+                </th>
+                <th className="sortable-th" onClick={() => toggleSort("full_name")}>
+                  Nombre{sortIndicator("full_name")}
+                </th>
                 <th>Teléfono</th>
                 <th>Estado</th>
-                <th>Fecha</th>
+                <th className="sortable-th" onClick={() => toggleSort("created_at")}>
+                  Fecha{sortIndicator("created_at")}
+                </th>
                 <th>Acciones</th>
               </tr>
             </thead>

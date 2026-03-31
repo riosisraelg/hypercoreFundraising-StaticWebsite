@@ -99,4 +99,8 @@ export const api = {
   delete<T>(endpoint: string, auth = false) {
     return request<T>(endpoint, { method: "DELETE", auth });
   },
+
+  put<T>(endpoint: string, body?: unknown, auth = false) {
+    return request<T>(endpoint, { method: "PUT", body, auth });
+  },
 };

@@ -33,24 +33,43 @@ export default function DashboardPage() {
   const [dashboard, setDashboard] = useState<DashboardData | null>(null);
   const [recentTickets, setRecentTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editingExtra, setEditingExtra] = useState(false);
+  const [extraAmount, setExtraAmount] = useState("");
+  const [extraSaving, setExtraSaving] = useState(false);
+
+  async function loadDashboard() {
+    try {
+      const [dash, tickets] = await Promise.all([
+        api.get<DashboardData>("/dashboard"),
+        api.get<Ticket[]>("/tickets/", true),
+      ]);
+      setDashboard(dash);
+      setRecentTickets(tickets.slice(0, 10));
+    } catch {
+      /* handled by empty state */
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
-    async function load() {
-      try {
-        const [dash, tickets] = await Promise.all([
-          api.get<DashboardData>("/dashboard"),
-          api.get<Ticket[]>("/tickets/", true),
-        ]);
-        setDashboard(dash);
-        setRecentTickets(tickets.slice(0, 10));
-      } catch {
-        /* handled by empty state */
-      } finally {
-        setLoading(false);
-      }
-    }
-    load();
+    loadDashboard();
   }, []);
+
+  async function handleSaveExtra() {
+    const amount = parseInt(extraAmount, 10);
+    if (isNaN(amount) || amount < 0) return;
+    setExtraSaving(true);
+    try {
+      await api.put("/fundraising-extra", { amount }, true);
+      setEditingExtra(false);
+      await loadDashboard();
+    } catch {
+      /* silent */
+    } finally {
+      setExtraSaving(false);
+    }
+  }
 
   if (loading) return <p>Cargando…</p>;
 
@@ -75,12 +94,6 @@ export default function DashboardPage() {
           </span>
         </div>
         <div className="card-elevated stat-card">
-          <span className="label-meta">Premios</span>
-          <span className="stat-value" style={{ color: "var(--error, #ba1a1a)" }}>
-            -${(dashboard?.prize_costs ?? 0).toLocaleString("es-MX")}
-          </span>
-        </div>
-        <div className="card-elevated stat-card">
           <span className="label-meta">Neto sorteo</span>
           <span className="stat-value">
             ${(dashboard?.raffle_net ?? 0).toLocaleString("es-MX")}
@@ -88,9 +101,49 @@ export default function DashboardPage() {
         </div>
         <div className="card-elevated stat-card">
           <span className="label-meta">Otros ingresos</span>
-          <span className="stat-value">
-            ${(dashboard?.extra_raised ?? 0).toLocaleString("es-MX")}
-          </span>
+          {editingExtra ? (
+            <div className="extra-edit-row">
+              <input
+                type="number"
+                className="input-field input-sm"
+                value={extraAmount}
+                onChange={(e) => setExtraAmount(e.target.value)}
+                min={0}
+                autoFocus
+              />
+              <button
+                className="btn-primary btn-sm"
+                onClick={handleSaveExtra}
+                disabled={extraSaving}
+                type="button"
+              >
+                {extraSaving ? "…" : "Guardar"}
+              </button>
+              <button
+                className="btn-ghost btn-sm"
+                onClick={() => setEditingExtra(false)}
+                type="button"
+              >
+                ✕
+              </button>
+            </div>
+          ) : (
+            <div className="extra-display-row">
+              <span className="stat-value">
+                ${(dashboard?.extra_raised ?? 0).toLocaleString("es-MX")}
+              </span>
+              <button
+                className="btn-ghost btn-sm"
+                onClick={() => {
+                  setExtraAmount(String(dashboard?.extra_raised ?? 0));
+                  setEditingExtra(true);
+                }}
+                type="button"
+              >
+                Editar
+              </button>
+            </div>
+          )}
         </div>
         <div className="card-elevated stat-card">
           <span className="label-meta">Meta total</span>
