@@ -10,7 +10,9 @@ interface FolioCell {
 
 interface DashboardData {
   active_tickets: number;
-  raffle_raised: number;
+  raffle_gross: number;
+  prize_costs: number;
+  raffle_net: number;
   extra_raised: number;
   total_raised: number;
   goal: number;
@@ -97,9 +99,9 @@ export default function HomePage() {
               </div>
               <div className="stat-block">
                 <span className="stat-value">
-                  ${dashboard.raffle_raised.toLocaleString("es-MX")}
+                  ${dashboard.raffle_net.toLocaleString("es-MX")}
                 </span>
-                <span className="stat-label">Sorteo</span>
+                <span className="stat-label">Neto sorteo</span>
               </div>
               <div className="stat-block">
                 <span className="stat-value">
@@ -117,8 +119,8 @@ export default function HomePage() {
             <div className="progress-bar-stacked" aria-label="Progreso de recaudación">
               <div
                 className="progress-segment progress-raffle"
-                style={{ width: `${Math.min((dashboard.raffle_raised / dashboard.goal) * 100, 100)}%` }}
-                title={`Sorteo: $${dashboard.raffle_raised.toLocaleString("es-MX")}`}
+                style={{ width: `${Math.min((dashboard.raffle_net / dashboard.goal) * 100, 100)}%` }}
+                title={`Sorteo (neto): $${dashboard.raffle_net.toLocaleString("es-MX")}`}
               />
               <div
                 className="progress-segment progress-extra"
@@ -127,11 +129,14 @@ export default function HomePage() {
               />
             </div>
             <div className="progress-legend">
-              <span className="legend-item"><span className="legend-dot-bar raffle" /> Sorteo</span>
+              <span className="legend-item"><span className="legend-dot-bar raffle" /> Sorteo (neto de premios)</span>
               <span className="legend-item"><span className="legend-dot-bar extra" /> Otros ingresos</span>
             </div>
             <p className="progress-text">
               ${dashboard.total_raised.toLocaleString("es-MX")} de ${dashboard.goal.toLocaleString("es-MX")} ({progressPercent.toFixed(0)}%)
+            </p>
+            <p className="transparency-note">
+              Venta bruta: ${dashboard.raffle_gross.toLocaleString("es-MX")} − Premios: ${dashboard.prize_costs.toLocaleString("es-MX")} = Neto: ${dashboard.raffle_net.toLocaleString("es-MX")}
             </p>
           </div>
         ) : (

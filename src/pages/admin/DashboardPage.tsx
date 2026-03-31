@@ -10,7 +10,9 @@ interface FolioCell {
 
 interface DashboardData {
   active_tickets: number;
-  raffle_raised: number;
+  raffle_gross: number;
+  prize_costs: number;
+  raffle_net: number;
   extra_raised: number;
   total_raised: number;
   goal: number;
@@ -67,21 +69,33 @@ export default function DashboardPage() {
           <span className="stat-value">{dashboard?.active_tickets ?? 0}</span>
         </div>
         <div className="card-elevated stat-card">
-          <span className="label-meta">Sorteo</span>
+          <span className="label-meta">Bruto sorteo</span>
           <span className="stat-value">
-            ${(dashboard?.raffle_raised ?? 0).toLocaleString("es-MX")} MXN
+            ${(dashboard?.raffle_gross ?? 0).toLocaleString("es-MX")}
+          </span>
+        </div>
+        <div className="card-elevated stat-card">
+          <span className="label-meta">Premios</span>
+          <span className="stat-value" style={{ color: "var(--error, #ba1a1a)" }}>
+            -${(dashboard?.prize_costs ?? 0).toLocaleString("es-MX")}
+          </span>
+        </div>
+        <div className="card-elevated stat-card">
+          <span className="label-meta">Neto sorteo</span>
+          <span className="stat-value">
+            ${(dashboard?.raffle_net ?? 0).toLocaleString("es-MX")}
           </span>
         </div>
         <div className="card-elevated stat-card">
           <span className="label-meta">Otros ingresos</span>
           <span className="stat-value">
-            ${(dashboard?.extra_raised ?? 0).toLocaleString("es-MX")} MXN
+            ${(dashboard?.extra_raised ?? 0).toLocaleString("es-MX")}
           </span>
         </div>
         <div className="card-elevated stat-card">
           <span className="label-meta">Meta total</span>
           <span className="stat-value">
-            ${(dashboard?.goal ?? 0).toLocaleString("es-MX")} MXN
+            ${(dashboard?.goal ?? 0).toLocaleString("es-MX")}
           </span>
         </div>
       </div>
@@ -95,7 +109,7 @@ export default function DashboardPage() {
         <div className="progress-bar-stacked-admin">
           <div
             className="progress-segment progress-raffle"
-            style={{ width: `${Math.min(((dashboard?.raffle_raised ?? 0) / (dashboard?.goal ?? 1)) * 100, 100)}%` }}
+            style={{ width: `${Math.min(((dashboard?.raffle_net ?? 0) / (dashboard?.goal ?? 1)) * 100, 100)}%` }}
           />
           <div
             className="progress-segment progress-extra"
@@ -103,7 +117,7 @@ export default function DashboardPage() {
           />
         </div>
         <div className="progress-legend-admin">
-          <span><span className="legend-dot-bar raffle" /> Sorteo</span>
+          <span><span className="legend-dot-bar raffle" /> Sorteo (neto)</span>
           <span><span className="legend-dot-bar extra" /> Otros</span>
         </div>
       </div>
@@ -118,16 +132,18 @@ export default function DashboardPage() {
         </Link>
       </div>
 
-      {/* Folio grid */}
-      {dashboard?.grid && (
-        <div className="card">
-          <FolioGrid grid={dashboard.grid} title="Mapa de boletos" />
-        </div>
-      )}
+      {/* Grid + Recent tickets side by side */}
+      <div className="dashboard-columns">
+        {/* Folio grid */}
+        {dashboard?.grid && (
+          <div className="card">
+            <FolioGrid grid={dashboard.grid} title="Mapa de boletos" />
+          </div>
+        )}
 
-      {/* Recent tickets */}
-      <div className="card">
-        <h2 className="page-subheading">Boletos recientes</h2>
+        {/* Recent tickets */}
+        <div className="card">
+          <h2 className="page-subheading">Boletos recientes</h2>
         {recentTickets.length === 0 ? (
           <p className="empty-state">No hay boletos registrados aún.</p>
         ) : (
@@ -156,6 +172,7 @@ export default function DashboardPage() {
             </tbody>
           </table>
         )}
+        </div>
       </div>
     </div>
   );

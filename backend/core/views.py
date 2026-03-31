@@ -234,8 +234,11 @@ class ThrottledTokenObtainPairView(TokenObtainPairView):
     throttle_classes = [LoginThrottle]
 
 TICKET_PRICE_MXN = 200
+TOTAL_TICKETS = 200
+PRIZE_COSTS_MXN = 7_109  # $5,000 + $1,260 (JBL) + $849 (Dobel)
+RAFFLE_GROSS_MXN = TOTAL_TICKETS * TICKET_PRICE_MXN  # $40,000
+RAFFLE_NET_MXN = RAFFLE_GROSS_MXN - PRIZE_COSTS_MXN  # $32,891
 FUNDRAISING_GOAL_MXN = 52_000
-RAFFLE_GOAL_MXN = 40_000
 
 
 class DrawExecuteView(APIView):
@@ -338,11 +341,13 @@ class DashboardView(APIView):
 
         data = {
             "active_tickets": active_count,
-            "raffle_raised": raffle_raised,
+            "raffle_gross": raffle_raised,
+            "prize_costs": PRIZE_COSTS_MXN,
+            "raffle_net": max(raffle_raised - PRIZE_COSTS_MXN, 0),
             "extra_raised": extra_raised,
-            "total_raised": raffle_raised + extra_raised,
+            "total_raised": max(raffle_raised - PRIZE_COSTS_MXN, 0) + extra_raised,
             "goal": FUNDRAISING_GOAL_MXN,
-            "raffle_goal": RAFFLE_GOAL_MXN,
+            "raffle_goal": RAFFLE_NET_MXN,
             "grid": grid,
         }
         return Response(data)

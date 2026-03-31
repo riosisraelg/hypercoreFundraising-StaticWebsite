@@ -13,29 +13,29 @@ from django.core.management.base import BaseCommand
 # Team HyperCore members — initial admin accounts
 INITIAL_ADMINS = [
     {
-        "username": "admin_meca1",
-        "first_name": "HyperCore",
-        "last_name": "Mechatronics 1",
+        "username": "israel",
+        "first_name": "Fernando Israel",
+        "last_name": "Rios Garcia",
     },
     {
-        "username": "admin_meca2",
-        "first_name": "HyperCore",
-        "last_name": "Mechatronics 2",
+        "username": "mariana",
+        "first_name": "Mariana",
+        "last_name": "Lopez Garcia",
     },
     {
-        "username": "admin_dev1",
-        "first_name": "HyperCore",
-        "last_name": "Developer 1",
+        "username": "diego",
+        "first_name": "Diego Santiago",
+        "last_name": "Saucedo García",
     },
     {
-        "username": "admin_dev2",
-        "first_name": "HyperCore",
-        "last_name": "Developer 2",
+        "username": "ana",
+        "first_name": "Ana Sarai",
+        "last_name": "Zuñiga Esquivel",
     },
     {
-        "username": "admin_member5",
-        "first_name": "HyperCore",
-        "last_name": "Member 5",
+        "username": "natalie",
+        "first_name": "Natalie",
+        "last_name": "HyperCore",
     },
 ]
 

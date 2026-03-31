@@ -206,6 +206,13 @@
   margin-top: var(--spacing-2);
 }
 
+.transparency-note {
+  font-size: var(--body-sm);
+  color: var(--on-surface-variant);
+  opacity: 0.7;
+  margin-top: var(--spacing-1);
+}
+
 .dashboard-loading,
 .dashboard-error {
   font-size: var(--body-md);

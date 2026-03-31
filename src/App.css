@@ -532,6 +532,19 @@
   flex-wrap: wrap;
 }
 
+.dashboard-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-6);
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .dashboard-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
 .empty-state {
   color: var(--on-surface-variant);
   font-size: var(--body-md);
@@ -800,7 +813,6 @@
 
 .prize-name {
   color: var(--on-surface-variant);
-  margin-left: auto;
 }
 
 .winners-grid {
