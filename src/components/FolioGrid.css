@@ -107,15 +107,30 @@
   z-index: 2;
 }
 
-/* Admin popup */
+/* Admin popup overlay */
+.folio-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+  padding: var(--spacing-4);
+}
+
 .folio-popup {
   position: relative;
-  margin-top: var(--spacing-4);
+  background: var(--surface);
+  border-radius: var(--rounded);
   padding: var(--spacing-5);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-4);
-  max-width: 20rem;
+  width: 100%;
+  max-width: 22rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
 .folio-popup-close {

@@ -29,7 +29,7 @@ interface FolioGridProps {
 function openWhatsApp(folio: string, status: "available" | "cancelled") {
   const msg =
     status === "available"
-      ? `Hola! 👋 Quiero apartar un boleto del Sorteo HyperCore 🎟️
+      ? `Hola! Quiero apartar un boleto del Sorteo HyperCore
 
 Cantidad de boletos: 1
 Folio que quiero: *${folio}*
@@ -38,8 +38,8 @@ Teléfono:
 
 ¿Los datos son correctos?
 
-📎 (Adjunta tu foto/captura de comprobante de pago)`
-      : `Hola! 👋 Vi que el boleto *${folio}* fue liberado en el Sorteo HyperCore 🎟️
+(Adjunta tu foto/captura de comprobante de pago)`
+      : `Hola! Vi que el boleto *${folio}* fue liberado en el Sorteo HyperCore
 
 Cantidad de boletos: 1
 Folio que quiero: *${folio}*
@@ -48,7 +48,7 @@ Teléfono:
 
 ¿Los datos son correctos?
 
-📎 (Adjunta tu foto/captura de comprobante de pago)`;
+(Adjunta tu foto/captura de comprobante de pago)`;
   window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
 }
 
@@ -121,63 +121,65 @@ export default function FolioGrid({ grid, title = "Boletos", mode = "public", ti
 
       {/* Admin popup */}
       {mode === "admin" && selectedCell && (
-        <div className="card-elevated folio-popup">
-          <button className="folio-popup-close" onClick={() => setSelectedCell(null)}>✕</button>
-          
-          {(() => {
-            const folioNumber = `HC-${String(selectedCell.number).padStart(3, "0")}`;
-            const ticketList = tickets.filter(t => t.folio === folioNumber);
-            const activeTicket = ticketList.find(t => t.status === "active");
-            const anyTicket = activeTicket || ticketList[0];
+        <div className="folio-popup-overlay" onClick={() => setSelectedCell(null)}>
+          <div className="card-elevated folio-popup" onClick={(e) => e.stopPropagation()}>
+            <button className="folio-popup-close" onClick={() => setSelectedCell(null)}>✕</button>
             
-            return (
-              <>
-                <div className="folio-popup-header">
-                  <span className="page-subheading" style={{ margin: 0 }}>Folio {folioNumber}</span>
-                  <span className={`chip chip-${selectedCell.status === "sold" ? "active" : "cancelled"}`} style={{ 
-                    ...(selectedCell.status === "available" ? { background: "var(--surface-container-low)", color: "var(--on-surface)", border: "1px solid var(--outline)" } : {})
-                  }}>
-                    {selectedCell.status === "sold" ? "Vendido" : selectedCell.status === "cancelled" ? "Cancelado" : "Disponible"}
-                  </span>
-                </div>
-                
-                {anyTicket ? (
-                  <div className="folio-popup-info">
-                    <div>
-                      <span className="label-meta">Comprador</span>
-                      <span>{anyTicket.full_name}</span>
-                    </div>
-                    <div>
-                      <span className="label-meta">Teléfono</span>
-                      <span>{anyTicket.phone}</span>
-                    </div>
-                    <div>
-                      <span className="label-meta">Fecha</span>
-                      <span>{new Date(anyTicket.created_at).toLocaleString("es-MX")}</span>
-                    </div>
-                    
-                    <div className="folio-popup-actions" style={{ marginTop: "1rem" }}>
-                      {selectedCell.status === "sold" && activeTicket && onCancel && (
-                        <button className="btn-accent btn-sm" onClick={() => {
-                          if (window.confirm(`¿Seguro que deseas cancelar el boleto ${folioNumber}?`)) {
-                            onCancel(activeTicket.id);
-                            setSelectedCell(null);
-                          }
-                        }}>Cancelar Boleto</button>
-                      )}
-                      {selectedCell.status === "sold" && activeTicket && onDownloadPdf && (
-                        <button className="btn-primary btn-sm" onClick={() => onDownloadPdf(activeTicket.id, activeTicket.folio)}>Descargar PDF</button>
-                      )}
-                    </div>
+            {(() => {
+              const folioNumber = `HC-${String(selectedCell.number).padStart(3, "0")}`;
+              const ticketList = tickets.filter(t => t.folio === folioNumber);
+              const activeTicket = ticketList.find(t => t.status === "active");
+              const anyTicket = activeTicket || ticketList[0];
+              
+              return (
+                <>
+                  <div className="folio-popup-header">
+                    <span className="page-subheading" style={{ margin: 0 }}>Folio {folioNumber}</span>
+                    <span className={`chip chip-${selectedCell.status === "sold" ? "active" : "cancelled"}`} style={{ 
+                      ...(selectedCell.status === "available" ? { background: "var(--surface-container-low)", color: "var(--on-surface)", border: "1px solid var(--outline)" } : {})
+                    }}>
+                      {selectedCell.status === "sold" ? "Vendido" : selectedCell.status === "cancelled" ? "Cancelado" : "Disponible"}
+                    </span>
                   </div>
-                ) : (
-                  <div className="folio-popup-available">
-                    <p className="label-meta">No hay datos de compra asociados a este folio.</p>
-                  </div>
-                )}
-              </>
-            );
-          })()}
+                  
+                  {anyTicket ? (
+                    <div className="folio-popup-info">
+                      <div>
+                        <span className="label-meta">Comprador</span>
+                        <span>{anyTicket.full_name}</span>
+                      </div>
+                      <div>
+                        <span className="label-meta">Teléfono</span>
+                        <span>{anyTicket.phone}</span>
+                      </div>
+                      <div>
+                        <span className="label-meta">Fecha</span>
+                        <span>{new Date(anyTicket.created_at).toLocaleString("es-MX")}</span>
+                      </div>
+                      
+                      <div className="folio-popup-actions" style={{ marginTop: "1rem" }}>
+                        {selectedCell.status === "sold" && activeTicket && onCancel && (
+                          <button className="btn-accent btn-sm" onClick={() => {
+                            if (window.confirm(`¿Seguro que deseas cancelar el boleto ${folioNumber}?`)) {
+                              onCancel(activeTicket.id);
+                              setSelectedCell(null);
+                            }
+                          }}>Cancelar Boleto</button>
+                        )}
+                        {selectedCell.status === "sold" && activeTicket && onDownloadPdf && (
+                          <button className="btn-primary btn-sm" onClick={() => onDownloadPdf(activeTicket.id, activeTicket.folio)}>Descargar PDF</button>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="folio-popup-available">
+                      <p className="label-meta">No hay datos de compra asociados a este folio.</p>
+                    </div>
+                  )}
+                </>
+              );
+            })()}
+          </div>
         </div>
       )}
     </div>
