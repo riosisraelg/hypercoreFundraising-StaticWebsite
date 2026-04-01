@@ -51,7 +51,7 @@ export default function HomePage() {
           nacional del KIA Mexico Innovation MeetUp 2026 en Cancún.
         </p>
         <a
-          href={`https://wa.me/5214421206701?text=${encodeURIComponent("Hola, soy [tu nombre]. Me interesa comprar boleto(s) para la rifa HyperCore 🎟️\n\nNúmero(s) que quiero: \nTeléfono de contacto: ")}`}
+          href={`https://wa.me/5214421206701?text=${encodeURIComponent("Hola! 👋 Me interesa comprar boleto(s) para la rifa HyperCore 🎟️\n\nCantidad de boletos: \nFolios que quiero (o aleatorio): \nNombre completo: \nTeléfono de contacto: ")}`}
           className="btn-primary hero-cta"
           target="_blank"
           rel="noopener noreferrer"
@@ -165,7 +165,7 @@ export default function HomePage() {
               ¡No olvides enviar tu comprobante por WhatsApp!
             </p>
             <a
-              href={`https://wa.me/5214421206701?text=${encodeURIComponent("Hola, soy [tu nombre]. Adjunto mi comprobante de pago para la rifa HyperCore 🎟️\n\nNúmero(s) que quiero: \nTeléfono de contacto: \n\n📎 [Adjunta tu comprobante]")}`}
+              href={`https://wa.me/5214421206701?text=${encodeURIComponent("Hola! 👋 Adjunto mi comprobante de pago para la rifa HyperCore 🎟️\n\nCantidad de boletos pagados: \nFolios que quiero (o aleatorio): \nNombre completo: \nTeléfono de contacto: \n\n¿La información es correcta?\n\n📎 (Adjunta aquí tu foto/captura del comprobante)")}`}
               className="btn-primary payment-cta"
               target="_blank"
               rel="noopener noreferrer"
@@ -243,7 +243,7 @@ export default function HomePage() {
         <h2 className="section-title">Contacto</h2>
         <div className="contact-links">
           <a
-            href={`https://wa.me/5214421206701?text=${encodeURIComponent("Hola, soy [tu nombre]. Tengo una pregunta sobre la rifa HyperCore 🎟️\n\n")}`}
+            href={`https://wa.me/5214421206701?text=${encodeURIComponent("Hola! 👋 Tengo una pregunta sobre la rifa HyperCore 🎟️\n\n")}`}
             className="btn-primary"
             target="_blank"
             rel="noopener noreferrer"
