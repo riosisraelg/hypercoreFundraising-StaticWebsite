@@ -259,6 +259,7 @@ from .serializers import (
     DrawExecuteSerializer,
     DrawResultPublicSerializer,
     DrawResultResponseSerializer,
+    TicketValidationSerializer,
 )
 from .throttles import LoginThrottle, PublicEndpointThrottle
 
@@ -462,3 +463,22 @@ class FundraisingExtraView(APIView):
         extra.updated_by = request.user
         extra.save()
         return Response({"amount": extra.amount})
+
+
+class TicketValidateView(APIView):
+    """GET /api/tickets/:id/validate — Public validation endpoint."""
+    permission_classes = [AllowAny]
+    throttle_classes = [PublicEndpointThrottle]
+
+    def get(self, request, ticket_id):
+        try:
+            ticket = Ticket.objects.get(pk=ticket_id)
+        except Ticket.DoesNotExist:
+            return Response(
+                {"detail": "Ticket not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        serializer = TicketValidationSerializer(ticket)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+

@@ -11,6 +11,7 @@ import DashboardPage from "./pages/admin/DashboardPage";
 import TicketListPage from "./pages/admin/TicketListPage";
 import TicketNewPage from "./pages/admin/TicketNewPage";
 import DrawPage from "./pages/admin/DrawPage";
+import ValidatePage from "./pages/public/ValidatePage";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/results" element={<ResultsPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/validate/:ticketId" element={<ValidatePage />} />
       </Route>
 
       {/* Admin login — outside protected wrapper */}

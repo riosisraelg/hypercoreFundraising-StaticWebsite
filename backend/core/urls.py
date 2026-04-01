@@ -15,6 +15,7 @@ urlpatterns = [
     path('tickets/<uuid:ticket_id>/cancel', views.TicketCancelView.as_view(), name='ticket-cancel'),
     path('tickets/<uuid:ticket_id>/edit', views.TicketEditView.as_view(), name='ticket-edit'),
     path('tickets/<uuid:ticket_id>/reassign', views.TicketReassignView.as_view(), name='ticket-reassign'),
+    path('tickets/<uuid:ticket_id>/validate', views.TicketValidateView.as_view(), name='ticket-validate'),
     # Ticket downloads (admin)
     path('tickets/<uuid:ticket_id>/download/pdf', views.TicketDownloadPDFView.as_view(), name='ticket-download-pdf'),
     path('tickets/<uuid:ticket_id>/download/wallet', views.TicketDownloadWalletView.as_view(), name='ticket-download-wallet'),

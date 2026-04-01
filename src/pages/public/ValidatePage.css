@@ -1,0 +1,145 @@
+.validate-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  padding: 2rem;
+  background-color: var(--surface);
+}
+
+.validate-container {
+  background: white;
+  border-radius: 1rem;
+  padding: 3rem 2rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 4px 20px rgba(0, 83, 76, 0.08);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.validate-container.loading {
+  color: var(--on-surface-muted);
+}
+
+.validate-container.error {
+  border-top: 6px solid #ff4444;
+}
+
+.validate-container.error .status-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.validate-container.error h1 {
+  font-size: 1.5rem;
+  color: var(--on-surface);
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.validate-container.error .detail {
+  color: var(--on-surface-muted);
+  margin-bottom: 2rem;
+}
+
+.validate-container.active {
+  border-top: 6px solid #4caf50;
+}
+
+.validate-container.cancelled {
+  border-top: 6px solid #ff4444;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-weight: bold;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 2rem;
+}
+
+.active .status-badge {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.cancelled .status-badge {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.ticket-details {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  background: var(--surface-container-low);
+  padding: 2rem;
+  border-radius: 0.5rem;
+}
+
+.detail-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.detail-row .label {
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: var(--on-surface-muted);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.detail-row .value {
+  font-size: 1.125rem;
+  color: var(--on-surface);
+  font-weight: 500;
+}
+
+.detail-row .value.folio {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--primary);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  animation: rotate 2s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.spinner .path {
+  stroke: var(--primary);
+  stroke-linecap: round;
+  animation: dash 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}

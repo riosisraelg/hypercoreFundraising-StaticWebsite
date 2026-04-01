@@ -1,0 +1,4 @@
+# file: /Users/riosisraelg/Desktop/1/hyperCoreFounding/backend/config/settings.py
+# hypothesis_version: 6.151.10
+
+[31536000, ',', '.env', '10/minute', '200', '26000', '30/minute', '5432', '60', '60/minute', '7', 'APP_DIRS', 'America/Mexico_City', 'BACKEND', 'CORS_ALLOWED_ORIGINS', 'DATABASE_URL', 'DENY', 'DIRS', 'DJANGO_ALLOWED_HOSTS', 'DJANGO_DEBUG', 'DJANGO_SECRET_KEY', 'ENGINE', 'FOLIO_PREFIX', 'FUNDRAISING_GOAL_MXN', 'HC', 'HOST', 'NAME', 'OPTIONS', 'PASSWORD', 'PORT', 'RDS_DB_NAME', 'RDS_HOSTNAME', 'RDS_PASSWORD', 'RDS_PORT', 'RDS_USERNAME', 'SITE_BASE_URL', 'TICKET_PRICE_MXN', 'True', 'USER', 'anon', 'change-me', 'config.urls', 'context_processors', 'core', 'corsheaders', 'db.sqlite3', 'default', 'django.contrib.admin', 'django.contrib.auth', 'es-mx', 'https', 'hypercore_draw', 'localhost', 'localhost,127.0.0.1', 'login', 'postgres', 'public', 'rest_framework', 'static/', 'staticfiles', 'test']

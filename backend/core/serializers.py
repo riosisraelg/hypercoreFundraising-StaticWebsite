@@ -276,3 +276,10 @@ class DashboardSerializer(serializers.Serializer):
     active_tickets = serializers.IntegerField()
     total_raised = serializers.IntegerField()
     goal = serializers.IntegerField()
+
+
+class TicketValidationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ticket
+        fields = ['id', 'folio', 'status', 'full_name']
+

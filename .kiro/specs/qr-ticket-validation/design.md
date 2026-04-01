@@ -483,21 +483,43 @@ qr_png = generate_qr_image(
 
 ## Correctness Properties
 
-The following properties must hold for the QR ticket validation system:
+*A property is a characteristic or behavior that should hold true across all valid executions of a system — essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees.*
 
-1. **QR URL Uniqueness**: For all tickets `t1`, `t2` where `t1.id ≠ t2.id`, the QR-encoded URLs are different. This is guaranteed by the UUID being part of the URL.
+### Property 1: QR URL Round-Trip
 
-2. **Cancelled Ticket Permanence**: For any ticket `t` where `t.status == 'cancelled'`, scanning its QR code always returns `status: "cancelled"`. Cancellation is irreversible — there is no "uncancel" operation.
+*For any* valid ticket UUID and non-empty base URL string, encoding them into a QR code via `generate_qr_image()` and then decoding the resulting PNG should yield exactly the string `{base_url}/api/tickets/{ticket_id}/validate` — no extra characters, no truncation.
 
-3. **Reassignment Isolation**: When a folio is reassigned, the original cancelled ticket's UUID and QR remain unchanged. The new ticket gets a new UUID. Formally: `reassign(ticket_A) → ticket_B` where `ticket_B.id ≠ ticket_A.id` and `ticket_B.folio == ticket_A.folio`.
+**Validates: Requirements 1.1, 1.2, 1.3**
 
-4. **QR Decodability**: For all generated QR codes, decoding the QR image yields exactly the string `{base_url}/api/tickets/{ticket.id}/validate`. No extra data, no truncation.
+### Property 2: Validation Response Contains Exactly the Required Fields
 
-5. **Public Access**: The validation endpoint requires no authentication. For any valid HTTP GET request to `/api/tickets/{uuid}/validate`, the server responds without requiring JWT tokens or session cookies.
+*For any* ticket that exists in the database, a GET request to `/api/tickets/{uuid}/validate` should return HTTP 200 with a response body containing exactly `id`, `folio`, `status`, and `full_name` — and never `phone`, `created_by`, `created_at`, or `cancelled_at`.
 
-6. **Status Consistency**: The `status` field returned by the validation endpoint always matches the current `status` value in the database at the time of the request. There is no caching layer between the endpoint and the database.
+**Validates: Requirements 2.1, 2.4**
 
-7. **Minimal Data Exposure**: The validation endpoint returns only `id`, `folio`, `status`, and `full_name`. It never exposes `phone`, `created_by`, `created_at`, or `cancelled_at`.
+### Property 3: Non-Existent UUID Returns 404
+
+*For any* randomly generated UUID that does not correspond to a ticket in the database, a GET request to `/api/tickets/{uuid}/validate` should return HTTP 404.
+
+**Validates: Requirements 2.2**
+
+### Property 4: Cancelled Ticket Permanence
+
+*For any* ticket whose status is `cancelled`, the validation endpoint should always return `"status": "cancelled"` for that ticket's UUID, regardless of whether the folio has been reassigned to a new ticket.
+
+**Validates: Requirements 4.1, 4.3**
+
+### Property 5: Reassignment UUID Uniqueness
+
+*For any* cancelled ticket that is reassigned, the newly created ticket should have a UUID that is different from the original cancelled ticket's UUID, while sharing the same folio value.
+
+**Validates: Requirements 4.2**
+
+### Property 6: PDF Generation Embeds QR
+
+*For any* ticket instance, calling `generate_ticket_pdf()` should return non-empty bytes, and the function should invoke `generate_qr_image()` with the ticket's UUID and the resolved base URL.
+
+**Validates: Requirements 3.1, 3.2, 3.6**
 
 ## Error Handling
 
