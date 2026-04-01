@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
+import { Html5Qrcode } from "html5-qrcode";
 import { api, ApiError } from "../../lib/api";
 import "./ValidatePage.css";
 
@@ -17,6 +18,25 @@ export default function ValidatePage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(!!ticketId);
   const [searchId, setSearchId] = useState("");
+  const [isScanning, setIsScanning] = useState(false);
+  const [scanError, setScanError] = useState<string | null>(null);
+  const scannerRef = useRef<Html5Qrcode | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const extractTicketId = (decodedText: string) => {
+    // If it's a URL, extract the last segment
+    try {
+      const url = new URL(decodedText);
+      const pathSegments = url.pathname.split('/').filter(Boolean);
+      // Usually it's /validate/:ticketId
+      if (pathSegments.length >= 2 && pathSegments[0] === 'validate') {
+        return pathSegments[1];
+      }
+    } catch {
+      // Not a URL, use raw text if it looks like a UUID
+    }
+    return decodedText.trim();
+  };
 
   useEffect(() => {
     async function validateTicket() {
@@ -40,6 +60,12 @@ export default function ValidatePage() {
     if (ticketId) {
       validateTicket();
     }
+
+    return () => {
+      if (scannerRef.current) {
+        scannerRef.current.stop().catch(() => {});
+      }
+    };
   }, [ticketId]);
 
   function handleSearch(e: React.FormEvent) {
@@ -49,28 +75,117 @@ export default function ValidatePage() {
     }
   }
 
+  const startScanning = async () => {
+    setScanError(null);
+    setIsScanning(true);
+    const html5Qrcode = new Html5Qrcode("reader");
+    scannerRef.current = html5Qrcode;
+
+    try {
+      await html5Qrcode.start(
+        { facingMode: "environment" },
+        {
+          fps: 10,
+          qrbox: { width: 250, height: 250 },
+        },
+        (decodedText) => {
+          const id = extractTicketId(decodedText);
+          html5Qrcode.stop().then(() => {
+            setIsScanning(false);
+            navigate(`/validate/${id}`);
+          });
+        },
+        () => {} // silent scan failure
+      );
+    } catch (err) {
+      setScanError("No se pudo acceder a la cámara. Revisa los permisos.");
+      setIsScanning(false);
+    }
+  };
+
+  const stopScanning = async () => {
+    if (scannerRef.current) {
+      try {
+        await scannerRef.current.stop();
+        setIsScanning(false);
+      } catch (err) {
+        console.error("Error stopping scanner", err);
+      }
+    }
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setScanError(null);
+    const html5Qrcode = new Html5Qrcode("reader-hidden");
+    try {
+      const decodedText = await html5Qrcode.scanFile(file, true);
+      const id = extractTicketId(decodedText);
+      navigate(`/validate/${id}`);
+    } catch (err) {
+      setScanError("No se detectó ningún código QR en la imagen.");
+    }
+  };
+
   if (!ticketId) {
     return (
       <main className="validate-page">
         <div className="validate-container search">
           <h1>Validar Boleto</h1>
           <p className="detail" style={{ marginBottom: "1.5rem" }}>
-            Ingresa o escanea el código (UUID) de tu boleto para consultar su validez y detalles.
+            Ingresa, escanea o sube una foto del código de tu boleto para consultar su validez.
           </p>
-          <form className="validate-search-form" onSubmit={handleSearch}>
-            <input
-              type="text"
-              className="input-field"
-              placeholder="Ej: f47ac10b-58cc-4372-..."
-              value={searchId}
-              onChange={(e) => setSearchId(e.target.value)}
-              required
-            />
-            <button type="submit" className="btn-primary" style={{ marginTop: "1rem", width: "100%" }}>
-              Verificar Estado
-            </button>
-          </form>
-          <Link to="/" className="btn-ghost" style={{ marginTop: "1rem" }}>Regresar al Sorteo</Link>
+
+          {!isScanning ? (
+            <div className="validate-actions">
+              <div className="action-buttons">
+                <button onClick={startScanning} className="btn-primary flex-center">
+                  <span className="icon">📷</span> Escanear con Cámara
+                </button>
+                <button onClick={() => fileInputRef.current?.click()} className="btn-secondary flex-center">
+                  <span className="icon">🖼️</span> Cargar desde Galería
+                </button>
+              </div>
+
+              <div className="divider">O ingresa el código manualmente</div>
+
+              <form className="validate-search-form" onSubmit={handleSearch}>
+                <input
+                  type="text"
+                  className="input-field"
+                  placeholder="Ej: f47ac10b-58cc-4372-..."
+                  value={searchId}
+                  onChange={(e) => setSearchId(e.target.value)}
+                  required
+                />
+                <button type="submit" className="btn-accent" style={{ marginTop: "1rem", width: "100%" }}>
+                  Verificar Estado
+                </button>
+              </form>
+            </div>
+          ) : (
+            <div className="scanner-view">
+              <div id="reader" style={{ width: "100%", maxWidth: "400px", margin: "0 auto" }}></div>
+              <button onClick={stopScanning} className="btn-outline" style={{ marginTop: "1.5rem" }}>
+                Cancelar Escaneo
+              </button>
+            </div>
+          )}
+
+          {scanError && <p className="scan-error">{scanError}</p>}
+          
+          <input 
+            type="file" 
+            ref={fileInputRef} 
+            onChange={handleFileUpload} 
+            accept="image/*" 
+            style={{ display: "none" }} 
+          />
+          <div id="reader-hidden" style={{ display: "none" }}></div>
+
+          <Link to="/" className="btn-ghost" style={{ marginTop: "2rem" }}>Regresar al Sorteo</Link>
         </div>
       </main>
     );
