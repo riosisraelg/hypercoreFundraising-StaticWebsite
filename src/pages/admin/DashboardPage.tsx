@@ -44,7 +44,11 @@ export default function DashboardPage() {
         api.get<Ticket[]>("/tickets/", true),
       ]);
       setDashboard(dash);
-      setRecentTickets(tickets.slice(0, 10));
+      setRecentTickets(
+        [...tickets]
+          .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+          .slice(0, 10)
+      );
     } catch {
       /* handled by empty state */
     } finally {
