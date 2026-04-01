@@ -266,6 +266,106 @@
   overflow: hidden;
 }
 
+/* Timeline Section */
+.timeline-section {
+  padding: var(--spacing-6) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-5);
+  background: var(--surface-container-low);
+  border-radius: var(--rounded-lg);
+  margin-top: var(--spacing-6);
+}
+
+.timeline-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-5);
+  padding: 0 var(--spacing-4);
+  position: relative;
+}
+
+.timeline-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 2rem;
+  width: 2px;
+  background: var(--outline-variant);
+}
+
+.timeline-item {
+  display: flex;
+  gap: var(--spacing-4);
+  position: relative;
+  z-index: 1;
+}
+
+.timeline-marker {
+  width: 1rem;
+  height: 1rem;
+  background: var(--primary);
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 6px;
+  box-shadow: 0 0 0 4px var(--surface-container-low);
+  position: relative;
+  left: calc(2rem - 0.5rem - 1px);
+}
+
+.timeline-content {
+  background: var(--surface);
+  padding: var(--spacing-4);
+  border-radius: var(--rounded);
+  border: 1px solid var(--outline-variant);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  margin-left: 1.5rem;
+}
+
+.timeline-date {
+  font-size: var(--body-sm);
+  color: var(--primary);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.timeline-title {
+  font-size: var(--body-lg);
+  font-weight: 700;
+  color: var(--on-surface);
+}
+
+.timeline-desc {
+  font-size: var(--body-md);
+  color: var(--on-surface-variant);
+  line-height: 1.5;
+}
+
+.timeline-item.active .timeline-marker {
+  background: var(--secondary);
+  box-shadow: 0 0 0 4px rgba(220, 255, 82, 0.2);
+}
+
+.timeline-item.active .timeline-content {
+  border-color: var(--secondary);
+}
+
+@media (max-width: 768px) {
+  .timeline-container::before {
+    left: 1.5rem;
+  }
+  .timeline-marker {
+    left: calc(1.5rem - 0.5rem - 1px);
+  }
+  .timeline-content {
+    margin-left: 1rem;
+  }
+}
 .progress-fill {
   height: 100%;
   background: var(--cta-gradient);

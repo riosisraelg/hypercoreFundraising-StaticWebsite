@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
-import { api } from "../../lib/api";
+import { api, ApiError } from "../../lib/api";
 import FolioGrid, { type TicketInfo } from "../../components/FolioGrid";
 
 interface FolioCell {
@@ -39,6 +39,13 @@ export default function DashboardPage() {
   const [editingExtra, setEditingExtra] = useState(false);
   const [extraAmount, setExtraAmount] = useState("");
   const [extraSaving, setExtraSaving] = useState(false);
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
+  
+  // Reassign state
+  const [reassignId, setReassignId] = useState<string | null>(null);
+  const [reassignName, setReassignName] = useState("");
+  const [reassignPhone, setReassignPhone] = useState("");
+  const [error, setError] = useState("");
 
   async function loadDashboard() {
     try {
@@ -86,8 +93,41 @@ export default function DashboardPage() {
     : 0;
 
   async function handleCancel(ticketId: string) {
-    await api.patch(`/tickets/${ticketId}/cancel`, {}, true);
-    await loadDashboard();
+    if (actionLoading) return;
+    setActionLoading(ticketId);
+    try {
+      await api.patch(`/tickets/${ticketId}/cancel`, {}, true);
+      await loadDashboard();
+    } finally {
+      setActionLoading(null);
+    }
+  }
+
+  async function handleReassign(e: FormEvent) {
+    e.preventDefault();
+    if (!reassignId || actionLoading) return;
+    setError("");
+    setActionLoading(reassignId);
+    try {
+      await api.post(
+        `/tickets/${reassignId}/reassign`,
+        { full_name: reassignName, phone: reassignPhone },
+        true
+      );
+      setReassignId(null);
+      setReassignName("");
+      setReassignPhone("");
+      await loadDashboard();
+    } catch (err: unknown) {
+      if (err instanceof ApiError && err.data) {
+        const msgs = Object.values(err.data).flat().join(" ");
+        setError(msgs as string || "Error al reasignar.");
+      } else {
+        setError("Error de conexión al intentar reasignar.");
+      }
+    } finally {
+      setActionLoading(null);
+    }
   }
 
   function handleDownloadPdf(ticketId: string, folio: string) {
@@ -231,6 +271,7 @@ export default function DashboardPage() {
               tickets={allTickets as TicketInfo[]}
               onCancel={handleCancel}
               onDownloadPdf={handleDownloadPdf}
+              onReassign={(id) => setReassignId(id)}
             />
           </div>
         )}
@@ -268,6 +309,54 @@ export default function DashboardPage() {
         )}
         </div>
       </div>
+
+      {/* Reassign modal */}
+      {reassignId && (
+        <div className="modal-overlay" onClick={() => setReassignId(null)}>
+          <div className="modal-card card-elevated" onClick={(e) => e.stopPropagation()}>
+            <h2 className="page-subheading">Reasignar folio</h2>
+            <p className="reassign-folio-label">
+              Folio: {allTickets.find((t) => t.id === reassignId)?.folio}
+            </p>
+            {error && <p className="form-error" style={{ marginBottom: "1rem" }}>{error}</p>}
+            <form onSubmit={handleReassign}>
+              <div className="form-group">
+                <label htmlFor="reassign_name" className="label-meta">Nombre completo</label>
+                <input
+                  id="reassign_name"
+                  className="input-field"
+                  type="text"
+                  value={reassignName}
+                  onChange={(e) => setReassignName(e.target.value)}
+                  placeholder="Nuevo comprador"
+                  maxLength={200}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="reassign_phone" className="label-meta">Teléfono</label>
+                <input
+                  id="reassign_phone"
+                  className="input-field"
+                  type="tel"
+                  value={reassignPhone}
+                  onChange={(e) => setReassignPhone(e.target.value)}
+                  placeholder="+52 123 456 7890"
+                  required
+                />
+              </div>
+              <div className="modal-actions">
+                <button type="submit" className="btn-primary" disabled={actionLoading === reassignId}>
+                  {actionLoading === reassignId ? "Reasignando…" : "Reasignar"}
+                </button>
+                <button type="button" className="btn-ghost" onClick={() => setReassignId(null)}>
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

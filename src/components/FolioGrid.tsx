@@ -24,6 +24,7 @@ interface FolioGridProps {
   tickets?: TicketInfo[];
   onCancel?: (ticketId: string) => Promise<void>;
   onDownloadPdf?: (ticketId: string, folio: string) => void;
+  onReassign?: (ticketId: string) => void;
 }
 
 function openWhatsApp(folio: string, status: "available" | "cancelled") {
@@ -52,7 +53,7 @@ Teléfono:
   window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
 }
 
-export default function FolioGrid({ grid, title = "Boletos", mode = "public", tickets = [], onCancel, onDownloadPdf }: FolioGridProps) {
+export default function FolioGrid({ grid, title = "Boletos", mode = "public", tickets = [], onCancel, onDownloadPdf, onReassign }: FolioGridProps) {
   const [selectedCell, setSelectedCell] = useState<FolioCell | null>(null);
 
   return (
@@ -168,6 +169,12 @@ export default function FolioGrid({ grid, title = "Boletos", mode = "public", ti
                         )}
                         {selectedCell.status === "sold" && activeTicket && onDownloadPdf && (
                           <button className="btn-primary btn-sm" onClick={() => onDownloadPdf(activeTicket.id, activeTicket.folio)}>Descargar PDF</button>
+                        )}
+                        {selectedCell.status === "cancelled" && anyTicket && onReassign && (
+                          <button className="btn-accent btn-sm" onClick={() => {
+                            onReassign(anyTicket.id);
+                            setSelectedCell(null);
+                          }}>Reasignar Comprador</button>
                         )}
                       </div>
                     </div>

@@ -238,6 +238,60 @@ export default function HomePage() {
         )}
       </section>
 
+      {/* Timeline Journey */}
+      <section className="timeline-section">
+        <h2 className="section-title" style={{ padding: "0 var(--spacing-4)" }}>Nuestro Camino a Cancún 🚀</h2>
+        <div className="timeline-container">
+          <div className="timeline-item">
+            <div className="timeline-marker"></div>
+            <div className="timeline-content">
+              <span className="timeline-date">Febrero 2026</span>
+              <h3 className="timeline-title">Concepción de la Idea</h3>
+              <p className="timeline-desc">
+                El equipo HyperCore se formó con la visión de innovar en los procesos industriales. 
+                Nació el concepto de "Digital Paintshop" para el KIA Challenge.
+              </p>
+            </div>
+          </div>
+
+          <div className="timeline-item">
+            <div className="timeline-marker"></div>
+            <div className="timeline-content">
+              <span className="timeline-date">Marzo 2026</span>
+              <h3 className="timeline-title">Desarrollo y Prototipado</h3>
+              <p className="timeline-desc">
+                Semanas intensas de diseño, programación y validación. Nuestro prototipo fue seleccionado 
+                para representar a nuestra sede a nivel nacional.
+              </p>
+            </div>
+          </div>
+
+          <div className="timeline-item active">
+            <div className="timeline-marker"></div>
+            <div className="timeline-content">
+              <span className="timeline-date">Abril 2026</span>
+              <h3 className="timeline-title">Recaudación y Gran Sorteo</h3>
+              <p className="timeline-desc">
+                Organizamos esta rifa benéfica para cubrir los viáticos y llevar nuestro proyecto a 
+                las grandes ligas. ¡Aquí es donde tú eres clave! El sorteo será el 25 de abril.
+              </p>
+            </div>
+          </div>
+
+          <div className="timeline-item">
+            <div className="timeline-marker"></div>
+            <div className="timeline-content">
+              <span className="timeline-date">Mayo 2026</span>
+              <h3 className="timeline-title">Final Nacional KIA Innovation</h3>
+              <p className="timeline-desc">
+                Viajaremos a Cancún para competir con las mejores universidades del país, presentar nuestro 
+                Digital Paintshop y poner en alto el nombre de Tecmilenio.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Contact */}
       <section className="contact-section">
         <h2 className="section-title">Contacto</h2>

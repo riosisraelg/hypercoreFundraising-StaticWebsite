@@ -173,6 +173,8 @@ def generate_ticket_pdf(ticket, base_url: str = "") -> bytes:
     c.setFillColor(ON_SURFACE_MUTED)
     c.setFont("Helvetica", 5)
     c.drawString(qr_x, qr_y - 3 * mm, "ESCANEA PARA VALIDAR")
+    c.setFont("Helvetica", 4)
+    c.drawString(qr_x, qr_y - 5 * mm, f"ID: {ticket.id}")
 
     # ── Footer — minimal, editorial ──
     c.setFillColor(ON_SURFACE_MUTED)
