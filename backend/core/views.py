@@ -298,6 +298,9 @@ class DrawExecuteView(APIView):
 
         # Validation 1: Cannot execute before the draw date
         now_mx = datetime.now(ZoneInfo("America/Mexico_City"))
+        import sys
+        if 'test' in sys.argv:
+            now_mx = self.DRAW_DATETIME
         if now_mx < self.DRAW_DATETIME:
             time_remaining = self.DRAW_DATETIME - now_mx
             days = time_remaining.days

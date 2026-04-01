@@ -1,0 +1,4 @@
+# file: /Users/riosisraelg/Desktop/1/hyperCoreFounding/backend/core/models.py
+# hypothesis_version: 6.151.10
+
+[200, 'Active', 'Cancelled', 'Extra income in MXN', 'active', 'cancelled', 'created_at', 'draw_results', 'folio', 'full_name', 'prize_rank', 'tickets', 'unique_active_folio']

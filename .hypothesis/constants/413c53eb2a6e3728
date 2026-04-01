@@ -1,0 +1,4 @@
+# file: /Users/riosisraelg/Desktop/1/hyperCoreFounding/backend/core/views.py
+# hypothesis_version: 6.151.10
+
+[200, 2026, 3600, 7109, 52000, 'America/Mexico_City', 'Content-Disposition', 'FOLIO_PREFIX', 'HC', 'Ticket not found.', 'active_tickets', 'already_executed', 'amount', 'application/pdf', 'available', 'blocked', 'cancelled', 'cancelled_at', 'cancelled_tickets', 'confirmar sorteo', 'confirmation', 'created_by', 'detail', 'draw_date', 'extra_raised', 'folio', 'full_name', 'goal', 'grid', 'message', 'number', 'phone', 'prize_costs', 'prize_name', 'prize_rank', 'raffle_goal', 'raffle_gross', 'raffle_net', 'request', 'results', 'rewrite draw', 'sold', 'status', 'ticket', 'total_folios', 'total_raised', 'unsold_tickets']

@@ -1,0 +1,4 @@
+# file: /Users/riosisraelg/Desktop/1/hyperCoreFounding/backend/core/migrations/0002_add_fundraising_extra.py
+# hypothesis_version: 6.151.10
+
+['0001_initial', 'Extra income in MXN', 'FundraisingExtra', 'ID', 'amount', 'core', 'id', 'updated_at', 'updated_by']

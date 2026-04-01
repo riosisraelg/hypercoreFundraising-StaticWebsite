@@ -178,5 +178,5 @@ CORS_ALLOW_CREDENTIALS = True
 TICKET_PRICE_MXN = int(os.getenv('TICKET_PRICE_MXN', '200'))
 FUNDRAISING_GOAL_MXN = int(os.getenv('FUNDRAISING_GOAL_MXN', '26000'))
 FOLIO_PREFIX = os.getenv('FOLIO_PREFIX', 'HC')
-SITE_BASE_URL = os.getenv('SITE_BASE_URL', 'http://localhost:5173')
+SITE_BASE_URL = os.getenv('SITE_BASE_URL', 'http://localhost:8000')
 
