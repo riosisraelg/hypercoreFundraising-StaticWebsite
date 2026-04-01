@@ -135,13 +135,27 @@ export default function DashboardPage() {
     fetch(`${API_BASE}/tickets/${ticketId}/download/pdf`, {
       headers: { Authorization: `Bearer ${token}` },
     })
-      .then((res) => res.blob())
+      .then((res) => {
+        if (!res.ok) {
+          if (res.status === 401) {
+            alert("Tu sesion ha expirado. Inicia sesion de nuevo.");
+            window.location.href = "/admin/login";
+            return null;
+          }
+          throw new Error(`Error ${res.status}`);
+        }
+        return res.blob();
+      })
       .then((blob) => {
+        if (!blob) return;
         const a = document.createElement("a");
         a.href = URL.createObjectURL(blob);
         a.download = `ticket-${folio}.pdf`;
         a.click();
         URL.revokeObjectURL(a.href);
+      })
+      .catch(() => {
+        alert("Error al descargar el PDF. Intenta de nuevo.");
       });
   }
 
