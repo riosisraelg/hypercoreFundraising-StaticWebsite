@@ -24,18 +24,22 @@ export default function ValidatePage() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const extractTicketId = (decodedText: string) => {
-    // If it's a URL, extract the last segment
+    // Regex for UUID v4
+    const uuidRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/i;
+    const match = decodedText.match(uuidRegex);
+    
+    if (match) {
+      return match[0];
+    }
+
+    // Fallback to old segment logic if no UUID found (unlikely for our tickets)
     try {
       const url = new URL(decodedText);
       const pathSegments = url.pathname.split('/').filter(Boolean);
-      // Usually it's /validate/:ticketId
-      if (pathSegments.length >= 2 && pathSegments[0] === 'validate') {
-        return pathSegments[1];
-      }
+      return pathSegments[pathSegments.length - 1] || decodedText.trim();
     } catch {
-      // Not a URL, use raw text if it looks like a UUID
+      return decodedText.trim();
     }
-    return decodedText.trim();
   };
 
   useEffect(() => {

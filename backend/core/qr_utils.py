@@ -5,7 +5,7 @@ from qrcode.constants import ERROR_CORRECT_M
 
 def generate_qr_image(ticket_id: uuid.UUID, base_url: str) -> bytes:
     """Generate a QR code PNG encoding the validation URL."""
-    validation_url = f"{base_url}/api/tickets/{ticket_id}/validate"
+    validation_url = f"{base_url}/validate/{ticket_id}"
     qr = qrcode.QRCode(
         version=None,
         error_correction=ERROR_CORRECT_M,
