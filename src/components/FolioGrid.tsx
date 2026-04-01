@@ -7,24 +7,49 @@ interface FolioCell {
   status: "available" | "sold" | "cancelled";
 }
 
+export interface TicketInfo {
+  id: string;
+  folio: string;
+  full_name: string;
+  phone: string;
+  status: string;
+  created_at: string;
+}
+
 interface FolioGridProps {
   grid: FolioCell[];
   title?: string;
+  mode?: "public" | "admin";
+  tickets?: TicketInfo[];
+  onCancel?: (ticketId: string) => Promise<void>;
+  onDownloadPdf?: (ticketId: string, folio: string) => void;
 }
 
 function openWhatsApp(folio: string, status: "available" | "cancelled") {
+  const folioLine = `Folio(s) que quiero: *${folio}* (o aleatorio si no importa)`;
   const msg =
     status === "available"
-      ? `Hola! 👋 Quiero apartar el boleto *${folio}* del Sorteo HyperCore 🎟️\n\n` +
-        `Mi nombre: [tu nombre]\n` +
-        `Mi teléfono: [tu número]\n\n` +
-        `¿Sigue disponible? 😊`
-      : `Hola! 👋 Vi que el boleto *${folio}* fue liberado en el Sorteo HyperCore 🎟️\n\n` +
-        `Mi nombre: [tu nombre]\n` +
-        `Mi teléfono: [tu número]\n\n` +
-        `¿Puedo comprarlo? 😊`;
-  const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
-  window.open(url, "_blank", "noopener,noreferrer");
+      ? `Hola! 👋 Quiero apartar un boleto del Sorteo HyperCore 🎟️
+
+Mi nombre: [tu nombre]
+Mi teléfono: [tu número]
+${folioLine}
+Cantidad de boletos: 1
+
+📎 [Adjunta tu comprobante de pago]
+
+¿Sigue disponible? 😊`
+      : `Hola! 👋 Vi que el boleto *${folio}* fue liberado en el Sorteo HyperCore 🎟️
+
+Mi nombre: [tu nombre]
+Mi teléfono: [tu número]
+Folio(s) que quiero: *${folio}*
+Cantidad de boletos: 1
+
+📎 [Adjunta tu comprobante de pago]
+
+¿Puedo comprarlo? 😊`;
+  window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
 }
 
 export default function FolioGrid({ grid, title = "Boletos" }: FolioGridProps) {
