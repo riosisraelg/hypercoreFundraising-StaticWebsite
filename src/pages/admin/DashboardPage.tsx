@@ -1,12 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
-import { api, ApiError } from "../../lib/api";
-import FolioGrid, { type TicketInfo } from "../../components/FolioGrid";
-
-interface FolioCell {
-  number: number;
-  status: "available" | "sold" | "pending";
-}
+import { api, ApiError, FolioCell, TicketInfo } from "../../lib/api";
+import FolioGrid from "../../components/FolioGrid";
 
 interface DashboardData {
   active_tickets: number;

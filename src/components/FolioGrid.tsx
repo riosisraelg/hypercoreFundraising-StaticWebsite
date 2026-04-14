@@ -1,23 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getToken } from "../lib/api";
+import { getToken, FolioCell, TicketInfo } from "../lib/api";
 import "./FolioGrid.css";
 
 const WA_NUMBER = "5214421206701";
-
-interface FolioCell {
-  number: number;
-  status: "available" | "sold" | "pending";
-}
-
-export interface TicketInfo {
-  id: string;
-  folio: string;
-  full_name: string;
-  phone: string;
-  status: string;
-  created_at: string;
-}
 
 interface FolioGridProps {
   grid: FolioCell[];
@@ -55,13 +41,13 @@ Teléfono:
   window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
 }
 
-export default function FolioGrid({ grid, title = "Boletos", mode = "public", tickets = [], onCancel, onDownloadPdf, onReassign }: FolioGridProps) {
+export default function FolioGrid({ grid, title = "Boletos", mode = "public", tickets = [], onCancel, onDownloadPdf }: FolioGridProps) {
   const [selectedCell, setSelectedCell] = useState<FolioCell | null>(null);
   const [selectedFolios, setSelectedFolios] = useState<number[]>([]);
   const navigate = useNavigate();
   const token = getToken();
 
-  const handleCellClick = (folio: string, cell: FolioCell) => {
+  const handleCellClick = (_folio: string, cell: FolioCell) => {
     if (mode === "admin") {
       setSelectedCell(cell === selectedCell ? null : cell);
     } else {

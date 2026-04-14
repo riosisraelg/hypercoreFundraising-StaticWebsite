@@ -1,13 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { api } from "../../lib/api";
+import { api, FolioCell } from "../../lib/api";
 import FolioGrid from "../../components/FolioGrid";
 import "./HomePage.css";
-
-interface FolioCell {
-  number: number;
-  status: "available" | "sold" | "cancelled";
-}
 
 interface DashboardData {
   active_tickets: number;

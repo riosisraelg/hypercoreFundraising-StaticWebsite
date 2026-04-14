@@ -83,9 +83,15 @@ export function downloadUrl(endpoint: string): string {
 
 export interface UserProfile {
   email: string;
+  username: string;
   first_name: string;
   last_name: string;
   is_staff: boolean;
+}
+
+export interface FolioCell {
+  number: number;
+  status: "available" | "sold" | "pending" | "cancelled";
 }
 
 export interface TicketInfo {
