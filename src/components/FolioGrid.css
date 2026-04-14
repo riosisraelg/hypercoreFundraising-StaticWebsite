@@ -34,8 +34,8 @@
   background: var(--primary);
 }
 
-.legend-dot.cancelled {
-  background: #f59e0b;
+.legend-dot.pending {
+  background: #f5a623;
 }
 
 .folio-grid {
@@ -85,8 +85,8 @@
   font-size: 0.7rem;
 }
 
-.folio-cancelled {
-  background: #f59e0b;
+.folio-pending {
+  background: #f5a623;
   color: #fff;
 }
 
@@ -100,11 +100,62 @@
   }
 }
 
-/* Selected cell */
+/* Admin Selected cell */
 .folio-selected {
   outline: 2px solid var(--secondary);
   outline-offset: 1px;
   z-index: 2;
+}
+
+/* Multi-select public cell */
+.folio-selected-multi {
+  background: var(--primary) !important;
+  color: #fff !important;
+  outline: 2px solid var(--secondary);
+  outline-offset: 1px;
+  z-index: 3;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 255, 157, 0.3);
+}
+
+.multi-select-bar {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  background: var(--surface-container-lowest);
+  padding: var(--spacing-4) var(--spacing-6);
+  border-radius: var(--rounded-lg);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--primary);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from { transform: translate(-50%, 100%); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
+}
+
+.multi-select-bar span {
+  font-weight: bold;
+  font-size: var(--body-lg);
+  color: var(--on-surface);
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .multi-select-bar {
+    width: 90%;
+    flex-direction: column;
+    text-align: center;
+  }
+  .multi-select-bar button {
+    width: 100%;
+  }
 }
 
 /* Admin popup overlay */

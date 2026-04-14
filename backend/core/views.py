@@ -5,9 +5,11 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from .authentication import JWTQueryParameterAuthentication
+from .ticket_generator import generate_ticket_pdf
 
 from .models import Ticket, FundraisingExtra
 from .serializers import (
@@ -17,8 +19,107 @@ from .serializers import (
     TicketReassignSerializer,
     TicketResponseSerializer,
 )
-from .ticket_generator import generate_ticket_pdf
+from .serializers import UserCreateSerializer
+from .emails import send_registration_email, send_reservation_email, send_validation_email, send_draw_results_emails
+from .throttles import PublicEndpointThrottle
 
+class RegistrationView(APIView):
+    """POST /api/auth/register — Public user registration."""
+    permission_classes = [AllowAny]
+    throttle_classes = [PublicEndpointThrottle]
+
+    def post(self, request):
+        serializer = UserCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        send_registration_email(user)
+        return Response({"detail": "User registered successfully.", "email": user.email}, status=status.HTTP_201_CREATED)
+
+class AuthMeView(APIView):
+    """GET /api/auth/me — Get details about the current logged-in user."""
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response({
+            "email": request.user.email,
+            "first_name": request.user.first_name,
+            "last_name": request.user.last_name,
+            "is_staff": request.user.is_staff or request.user.is_superuser,
+            "is_winner": getattr(request.user, 'is_winner', False)
+        })
+
+    def delete(self, request):
+        # Free tickets then delete user
+        Ticket.objects.filter(reserved_by=request.user).delete()
+        request.user.delete()
+        return Response({"detail": "Cuenta y boletos eliminados exitosamente."}, status=status.HTTP_200_OK)
+
+class MyTicketsView(APIView):
+    """GET /api/tickets/me — View tickets for the logged-in public user."""
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        tickets = Ticket.objects.filter(reserved_by=request.user)
+        serializer = TicketResponseSerializer(
+            tickets, many=True, context={'request': request},
+        )
+        return Response(serializer.data)
+
+class TicketReserveView(APIView):
+    """POST /api/tickets/reserve — Reserve a ticket (public user)."""
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        prefix = getattr(settings, 'FOLIO_PREFIX', 'HC')
+        folio_numbers = request.data.get('folio_numbers')
+        
+        if not folio_numbers or not isinstance(folio_numbers, list):
+            single_folio = request.data.get('folio_number')
+            if single_folio:
+                folio_numbers = [single_folio]
+            else:
+                return Response({"detail": "folio_numbers list is required."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Get full_name and phone from user or request
+        full_name = request.data.get('full_name', f"{request.user.first_name} {request.user.last_name}".strip())
+        phone = request.data.get('phone', '')
+
+        if not full_name:
+             return Response({"detail": "full_name is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        from datetime import timedelta
+        from django.db import transaction
+        expires_at = now() + timedelta(hours=24)
+        
+        created_tickets = []
+        
+        try:
+            with transaction.atomic():
+                for folio_num in folio_numbers:
+                    folio = f"{prefix}-{int(folio_num):03d}"
+                    
+                    if Ticket.objects.select_for_update().filter(folio=folio, status__in=[Ticket.Status.ACTIVE, Ticket.Status.PENDING]).exists():
+                        raise ValueError(f"El boleto {folio} ya fue apartado o vendido.")
+            
+                    ticket = Ticket.objects.create(
+                        folio=folio,
+                        full_name=full_name,
+                        phone=phone,
+                        status=Ticket.Status.PENDING,
+                        reserved_by=request.user,
+                        expires_at=expires_at
+                    )
+                    created_tickets.append(ticket)
+        except ValueError as e:
+            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+        for ticket in created_tickets:
+            send_reservation_email(ticket)
+
+        serializer = TicketResponseSerializer(
+            created_tickets, many=True, context={'request': request},
+        )
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class TicketCreateView(APIView):
     """POST /api/tickets — Register a new ticket (admin only)."""
@@ -61,7 +162,7 @@ class TicketBulkCreateView(APIView):
 
 
 class TicketListView(APIView):
-    """GET /api/tickets — List all tickets (active + cancelled)."""
+    """GET /api/tickets — List all tickets."""
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -87,23 +188,39 @@ class TicketDetailView(APIView):
 
 
 class TicketCancelView(APIView):
-    """PATCH /api/tickets/:id/cancel — Cancel an active ticket."""
+    """PATCH /api/tickets/:id/cancel — Free (Delete) a ticket."""
     permission_classes = [IsAuthenticated]
 
     def patch(self, request, ticket_id):
+        ticket = get_object_or_404(Ticket, pk=ticket_id)
+        ticket.delete()
+        return Response({'detail': 'Boleto liberado exitosamente.'}, status=status.HTTP_200_OK)
+
+class TicketApproveView(APIView):
+    """PATCH /api/tickets/:id/approve — Approve a pending ticket (admin only)."""
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request, ticket_id):
+        # Must be staff to approve. We'll enforce natively or assume admin users are staff.
+        if not request.user.is_staff and not request.user.is_superuser:
+            return Response({"detail": "Admin permission required."}, status=status.HTTP_403_FORBIDDEN)
+            
         ticket = get_object_or_404(
             Ticket.objects.select_related('created_by'), pk=ticket_id,
         )
 
-        if ticket.status == Ticket.Status.CANCELLED:
+        if ticket.status != Ticket.Status.PENDING:
             return Response(
-                {'detail': 'Ticket is already cancelled.'},
+                {'detail': 'Only pending tickets can be approved.'},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        ticket.status = Ticket.Status.CANCELLED
-        ticket.cancelled_at = now()
-        ticket.save(update_fields=['status', 'cancelled_at'])
+        ticket.status = Ticket.Status.ACTIVE
+        ticket.created_by = request.user # Set validator admin
+        ticket.expires_at = None # Clear expiration
+        ticket.save(update_fields=['status', 'created_by', 'expires_at'])
+        
+        send_validation_email(ticket)
 
         serializer = TicketResponseSerializer(
             ticket, context={'request': request},
@@ -111,46 +228,6 @@ class TicketCancelView(APIView):
         return Response(serializer.data)
 
 
-class TicketReassignView(APIView):
-    """POST /api/tickets/:id/reassign — Reassign a cancelled folio to a new buyer."""
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request, ticket_id):
-        original_ticket = get_object_or_404(
-            Ticket.objects.select_related('created_by'), pk=ticket_id,
-        )
-
-        # Only cancelled tickets can have their folio reassigned
-        if original_ticket.status == Ticket.Status.ACTIVE:
-            return Response(
-                {'detail': 'Cannot reassign an active folio. Cancel the ticket first.'},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        # Validate new buyer data
-        serializer = TicketReassignSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        # Double-check no active ticket already holds this folio (DB constraint also enforces this)
-        if Ticket.objects.filter(folio=original_ticket.folio, status=Ticket.Status.ACTIVE).exists():
-            return Response(
-                {'detail': 'This folio is already assigned to an active ticket.'},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        # Create a new active ticket reusing the folio
-        new_ticket = Ticket.objects.create(
-            folio=original_ticket.folio,
-            full_name=serializer.validated_data['full_name'],
-            phone=serializer.validated_data['phone'],
-            status=Ticket.Status.ACTIVE,
-            created_by=request.user,
-        )
-
-        response_serializer = TicketResponseSerializer(
-            new_ticket, context={'request': request},
-        )
-        return Response(response_serializer.data, status=status.HTTP_201_CREATED)
 
 
 class TicketEditView(APIView):
@@ -161,12 +238,6 @@ class TicketEditView(APIView):
         ticket = get_object_or_404(
             Ticket.objects.select_related('created_by'), pk=ticket_id,
         )
-
-        if ticket.status == Ticket.Status.CANCELLED:
-            return Response(
-                {'detail': 'Cannot edit a cancelled ticket.'},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
 
         serializer = TicketEditSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -190,6 +261,7 @@ class TicketEditView(APIView):
 
 class TicketDownloadPDFView(APIView):
     """GET /api/tickets/:id/download/pdf — Download ticket as PDF."""
+    authentication_classes = [JWTQueryParameterAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request, ticket_id):
@@ -209,6 +281,7 @@ class TicketDownloadWalletView(APIView):
     certificates (Apple Developer account + pass type ID + certificate).
     Returns a 501 until credentials are configured.
     """
+    authentication_classes = [JWTQueryParameterAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request, ticket_id):
@@ -233,6 +306,7 @@ class TicketDownloadGoogleWalletView(APIView):
     service account and Wallet API credentials. Returns a 501 until
     credentials are configured.
     """
+    authentication_classes = [JWTQueryParameterAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request, ticket_id):
@@ -321,8 +395,7 @@ class DrawExecuteView(APIView):
         # Validation 2: Check for unsold/cancelled tickets and require confirmation
         total_folios = 200
         active_count = Ticket.objects.filter(status=Ticket.Status.ACTIVE).count()
-        cancelled_count = Ticket.objects.filter(status=Ticket.Status.CANCELLED).count()
-        unsold_count = total_folios - active_count - cancelled_count
+        unsold_count = total_folios - active_count
 
         confirmation = serializer.validated_data.get("confirmation", "")
 
@@ -349,12 +422,10 @@ class DrawExecuteView(APIView):
                     "detail": (
                         f"Confirma la ejecución del sorteo. "
                         f"Boletos activos: {active_count}, "
-                        f"cancelados: {cancelled_count}, "
                         f"sin vender: {unsold_count} de {total_folios}."
                     ),
                     "requires_confirmation": True,
                     "active_tickets": active_count,
-                    "cancelled_tickets": cancelled_count,
                     "unsold_tickets": unsold_count,
                     "total_folios": total_folios,
                 },
@@ -377,6 +448,10 @@ class DrawExecuteView(APIView):
                 prize_name=winner["prize_name"],
             )
             draw_results.append(result)
+
+        # Notify participants
+        active_tickets = Ticket.objects.filter(status=Ticket.Status.ACTIVE)
+        send_draw_results_emails(winners, active_tickets)
 
         response_serializer = DrawResultResponseSerializer(
             draw_results, many=True,
@@ -417,20 +492,21 @@ class DashboardView(APIView):
             Ticket.objects.filter(status=Ticket.Status.ACTIVE)
             .values_list('folio', flat=True)
         )
-        cancelled_folios = set(
-            Ticket.objects.filter(status=Ticket.Status.CANCELLED)
+        pending_folios = set(
+            Ticket.objects.filter(status=Ticket.Status.PENDING)
             .values_list('folio', flat=True)
-        ) - active_folios
+        )
 
         grid = []
         for i in range(1, total_folios + 1):
             folio = f"{prefix}-{i:03d}"
             if folio in active_folios:
                 grid.append({"number": i, "status": "sold"})
-            elif folio in cancelled_folios:
-                grid.append({"number": i, "status": "cancelled"})
+            elif folio in pending_folios:
+                grid.append({"number": i, "status": "pending"})
             else:
                 grid.append({"number": i, "status": "available"})
+
 
         data = {
             "active_tickets": active_count,
@@ -484,4 +560,15 @@ class TicketValidateView(APIView):
 
         serializer = TicketValidationSerializer(ticket)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class ExpireTicketsView(APIView):
+    """GET /api/draw/expire-tickets — Daily/Hourly cron webhook to expire old pending tickets."""
+    permission_classes = [AllowAny]
+    throttle_classes = []
+
+    def get(self, request):
+        expired_tickets = Ticket.objects.filter(status=Ticket.Status.PENDING, expires_at__lt=now())
+        count = expired_tickets.count()
+        expired_tickets.delete()
+        return Response({"detail": f"{count} tickets liberated."}, status=status.HTTP_200_OK)
 

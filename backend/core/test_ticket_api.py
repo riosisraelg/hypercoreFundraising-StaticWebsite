@@ -6,7 +6,7 @@ Requirements: 1.1, 2.1, 2.2, 3.1, 3.2, 4.1, 4.2
 """
 import uuid
 
-from django.contrib.auth.models import User
+from core.models import User
 from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIClient

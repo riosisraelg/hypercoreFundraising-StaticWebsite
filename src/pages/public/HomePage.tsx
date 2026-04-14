@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { api } from "../../lib/api";
 import FolioGrid from "../../components/FolioGrid";
 import "./HomePage.css";
@@ -40,29 +41,94 @@ export default function HomePage() {
     <div className="home-page">
       {/* Hero */}
       <section className="hero-section">
-        <span className="hero-badge">🎟️ Rifa Benéfica — 25 de Abril, 6:00 PM</span>
-        <h1 className="hero-title">¡Compra tu boleto y gana premios!</h1>
+        <span className="hero-badge">🎟️ Gran Sorteo Benéfico — Rumbo a Cancún 2026</span>
+        <h1 className="hero-title">Ayúdanos a llegar a la gran Final Nacional</h1>
         <p className="hero-description">
-          Rifa benéfica de Team HyperCore (Universidad Tecmilenio).
-          Solo 200 boletos a $200 MXN cada uno. Escoge tu número,
-          paga por transferencia o efectivo, y participa por 3 premios.
-          El sorteo se realiza el 25 de abril a las 6:00 PM en vivo.
-          Todos los fondos van para nuestra participación en la final
-          nacional del KIA Mexico Innovation MeetUp 2026 en Cancún.
+          Somos 4 estudiantes de ingeniería de la Universidad Tecmilenio participando en el Innovation Meetup 2026. 
+          Tras mucho esfuerzo superamos la primera etapa como semifinalistas, y ahora vamos con todo rumbo a la final en Cancún. 
+          Estamos profundamente comprometidos y entusiasmados en dar nuestro máximo esfuerzo en la competencia. 
+          Tu apoyo significa el mundo para nosotros: comprando un boleto de $200 MXN nos ayudas a financiar los viáticos de nuestro viaje 
+          y, como agradecimiento, estarás participando para ganar cualquiera de nuestros increíbles premios. ¡Únete a nuestro sueño!
         </p>
-        <a
-          href={`https://wa.me/5214421206701?text=${encodeURIComponent("Hola! Me interesa comprar boleto(s) para la rifa HyperCore\n\nCantidad de boletos: \nFolios que quiero (o aleatorio): \nNombre completo: \nTeléfono de contacto: ")}`}
-          className="btn-primary hero-cta"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          🎟️ Comprar boleto por WhatsApp
-        </a>
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center', marginBottom: 'var(--spacing-8)' }}>
+          <a href="#boletos" className="btn-primary hero-cta">
+            🎟️ Seleccionar mi Boleto
+          </a>
+          <Link to="/about" className="btn-ghost hero-cta" style={{ border: "2px solid var(--primary)", color: "var(--primary)" }}>
+            Conocer al Equipo
+          </Link>
+        </div>
+
+        {/* Progress Bar inside Hero */}
+        <div style={{ maxWidth: '600px', margin: '0 auto', background: 'var(--surface-container-lowest)', padding: 'var(--spacing-4)', borderRadius: 'var(--rounded-lg)', boxShadow: 'var(--shadow-ambient)', border: '1px solid var(--ghost-border)' }}>
+          <h2 style={{ fontSize: '1.25rem', marginBottom: 'var(--spacing-3)', color: 'var(--on-surface)' }}>
+            Meta de Recaudación ({progressPercent.toFixed(0)}%)
+          </h2>
+          {loading ? (
+            <p className="dashboard-loading">Cargando datos…</p>
+          ) : dashboard ? (
+            <div>
+              <div className="progress-bar-stacked" aria-label="Progreso de recaudación" style={{ height: "1.25rem", borderRadius: "100px", marginBottom: "0.75rem" }}>
+                <div
+                  className="progress-segment progress-raffle"
+                  style={{ width: `${Math.min((dashboard.raffle_net / dashboard.goal) * 100, 100)}%` }}
+                  title={`Sorteo (neto): ${dashboard.raffle_net.toLocaleString("es-MX")}`}
+                />
+                <div
+                  className="progress-segment progress-extra"
+                  style={{ width: `${Math.min((dashboard.extra_raised / dashboard.goal) * 100, 100)}%` }}
+                  title={`Otros: ${dashboard.extra_raised.toLocaleString("es-MX")}`}
+                />
+              </div>
+              <p className="progress-text" style={{ textAlign: "center", fontWeight: "bold", fontSize: '0.9rem', color: 'var(--primary)' }}>
+                Llevamos ${dashboard.total_raised.toLocaleString("es-MX")} / ${dashboard.goal.toLocaleString("es-MX")}
+              </p>
+            </div>
+          ) : (
+            <p className="dashboard-error">No se pudieron cargar los datos.</p>
+          )}
+        </div>
+      </section>
+
+      {/* Timeline Journey (Moved up to tell the story first) */}
+      <section className="timeline-section" style={{ background: "var(--surface-container-low)" }}>
+        <div className="timeline-container">
+          <div className="timeline-item">
+            <div className="timeline-marker"></div>
+            <div className="timeline-content">
+              <span className="timeline-date">Abril 2026</span>
+              <h3 className="timeline-title">Recaudación y Gran Sorteo</h3>
+              <p className="timeline-desc">
+                Organizamos esta rifa para cubrir viáticos de nuestro equipo rumbo a Cancún. ¡Cada boleto es crucial!
+              </p>
+            </div>
+          </div>
+          <div className="timeline-item active">
+            <div className="timeline-marker"></div>
+            <div className="timeline-content">
+              <span className="timeline-date">25 Abril, 6 PM</span>
+              <h3 className="timeline-title">Sorteo en Vivo</h3>
+              <p className="timeline-desc">
+                Transmitiremos el sorteo de los 3 ganadores. Además, los resultados se publicarán aquí en la plataforma.
+              </p>
+            </div>
+          </div>
+          <div className="timeline-item">
+            <div className="timeline-marker"></div>
+            <div className="timeline-content">
+              <span className="timeline-date">Mayo 2026</span>
+              <h3 className="timeline-title">Final Nacional KIA Mexico</h3>
+              <p className="timeline-desc">
+                Representaremos a Querétaro con nuestro proyecto de digitalización de pintura automotriz de la Industria 4.0.
+              </p>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Prizes */}
       <section className="prizes-section">
-        <h2 className="section-title">Premios</h2>
+        <h2 className="section-title">Premios del Sorteo</h2>
         <div className="prizes-grid">
           <article className="prize-card prize-card--gold">
             <span className="prize-emoji" role="img" aria-label="Primer lugar">🥇</span>
@@ -85,8 +151,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* How to participate + Payment Info — side by side */}
-      <section className="participate-payment-section">
+      {/* How to participate */}
+      <section className="participate-payment-section" id="how-it-works">
         <div className="participate-payment-grid">
           <div className="participate-block">
             <h2 className="section-title">¿Cómo participar?</h2>
@@ -94,45 +160,36 @@ export default function HomePage() {
               <li className="step-item">
                 <span className="step-number">1</span>
                 <div>
-                  <span className="step-title">Escoge tu número</span>
+                  <span className="step-title">Elige tu Folio</span>
                   <span className="step-desc">
-                    Revisa la tabla de boletos abajo y elige los números disponibles.
+                    Baja a nuestra cuadrícula y haz clic en el número que desees apartar.
                   </span>
                 </div>
               </li>
               <li className="step-item">
                 <span className="step-number">2</span>
                 <div>
-                  <span className="step-title">Escríbenos por WhatsApp</span>
+                  <span className="step-title">Crea tu Cuenta / Reserva</span>
                   <span className="step-desc">
-                    Mándanos tu nombre, teléfono y los números que quieres.
+                    El sistema te pedirá iniciar sesión para guardar el boleto a tu nombre. Tu boleto quedará "Reservado" por 24 hrs. Recibirás una notificación por correo al apartarlo.
                   </span>
                 </div>
               </li>
               <li className="step-item">
                 <span className="step-number">3</span>
                 <div>
-                  <span className="step-title">Paga $200 MXN por boleto</span>
+                  <span className="step-title">Envía tu Comprobante de Pago</span>
                   <span className="step-desc">
-                    Transferencia bancaria o efectivo. Envía tu comprobante por WhatsApp.
+                    Paga $200 MXN. Desde tu Perfil, usa el botón "Enviar Comprobante" para enviarnos tu captura rápidamente por WhatsApp.
                   </span>
                 </div>
               </li>
               <li className="step-item">
                 <span className="step-number">4</span>
                 <div>
-                  <span className="step-title">Recibe tu boleto digital</span>
+                  <span className="step-title">Descarga tu PDF Oficial</span>
                   <span className="step-desc">
-                    Te enviamos un PDF con tu folio único.
-                  </span>
-                </div>
-              </li>
-              <li className="step-item">
-                <span className="step-number">5</span>
-                <div>
-                  <span className="step-title">Sorteo el 25 de Abril, 6 PM</span>
-                  <span className="step-desc">
-                    3 ganadores al azar. Resultados aquí y por WhatsApp.
+                    En cuanto validemos tu pago, te llegará otro correo y podrás descargar tu pase desde tu Perfil.
                   </span>
                 </div>
               </li>
@@ -140,13 +197,11 @@ export default function HomePage() {
           </div>
 
           <div className="payment-info-card card-elevated">
-            <h2 className="section-title">Datos de pago</h2>
-            <p className="payment-thanks">
-              ¡Gracias por apoyarnos a llegar a la final!
-            </p>
+            <h2 className="section-title">Datos Bancarios</h2>
+            <p className="payment-thanks">Cuentas con 24 horas tras reservar para realizar tu pago.</p>
             <div className="payment-details">
               <div className="payment-row">
-                <span className="payment-label">Beneficiaria</span>
+                <span className="payment-label">Titular</span>
                 <span className="payment-value">Mariana Lopez Garcia</span>
               </div>
               <div className="payment-row payment-row--highlight">
@@ -161,158 +216,15 @@ export default function HomePage() {
                 <span className="payment-value">012180015967864619</span>
               </div>
             </div>
-            <p className="payment-note">
-              ¡No olvides enviar tu comprobante por WhatsApp!
-            </p>
-            <a
-              href={`https://wa.me/5214421206701?text=${encodeURIComponent("Hola! Adjunto mi comprobante de pago para la rifa HyperCore\n\nCantidad de boletos pagados: \nFolios que quiero (o aleatorio): \nNombre completo: \nTeléfono de contacto: \n\n¿La información es correcta?\n\n(Adjunta aquí tu foto/captura del comprobante)")}`}
-              className="btn-primary payment-cta"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Enviar comprobante
-            </a>
           </div>
         </div>
       </section>
 
       {/* Folio Grid + Dashboard */}
-      <section className="dashboard-section">
+      <section className="dashboard-section" id="boletos">
         {dashboard?.grid && (
-          <FolioGrid grid={dashboard.grid} title="¡Escoge tu boleto!" />
+          <FolioGrid grid={dashboard.grid} title="¡Haz clic en un boleto para reservarlo!" />
         )}
-        <h2 className="section-title">Progreso de recaudación</h2>
-        {loading ? (
-          <p className="dashboard-loading">Cargando datos…</p>
-        ) : dashboard ? (
-          <div className="dashboard-card card-elevated">
-            <div className="dashboard-stats">
-              <div className="stat-block">
-                <span className="stat-value">{dashboard.active_tickets}</span>
-                <span className="stat-label">Boletos vendidos</span>
-              </div>
-              <div className="stat-block">
-                <span className="stat-value">
-                  ${dashboard.raffle_net.toLocaleString("es-MX")}
-                </span>
-                <span className="stat-label">Neto sorteo</span>
-              </div>
-              <div className="stat-block">
-                <span className="stat-value">
-                  ${dashboard.extra_raised.toLocaleString("es-MX")}
-                </span>
-                <span className="stat-label">Otros ingresos</span>
-              </div>
-              <div className="stat-block">
-                <span className="stat-value">
-                  ${dashboard.goal.toLocaleString("es-MX")}
-                </span>
-                <span className="stat-label">Meta total</span>
-              </div>
-            </div>
-            <div className="progress-bar-stacked" aria-label="Progreso de recaudación">
-              <div
-                className="progress-segment progress-raffle"
-                style={{ width: `${Math.min((dashboard.raffle_net / dashboard.goal) * 100, 100)}%` }}
-                title={`Sorteo (neto): ${dashboard.raffle_net.toLocaleString("es-MX")}`}
-              />
-              <div
-                className="progress-segment progress-extra"
-                style={{ width: `${Math.min((dashboard.extra_raised / dashboard.goal) * 100, 100)}%` }}
-                title={`Otros: ${dashboard.extra_raised.toLocaleString("es-MX")}`}
-              />
-            </div>
-            <div className="progress-legend">
-              <span className="legend-item"><span className="legend-dot-bar raffle" /> Sorteo (neto de premios)</span>
-              <span className="legend-item"><span className="legend-dot-bar extra" /> Otros ingresos</span>
-            </div>
-            <p className="progress-text">
-              ${dashboard.total_raised.toLocaleString("es-MX")} de ${dashboard.goal.toLocaleString("es-MX")} ({progressPercent.toFixed(0)}%)
-            </p>
-            <p className="transparency-note">
-              Venta bruta: ${dashboard.raffle_gross.toLocaleString("es-MX")} − Premios: ${dashboard.prize_costs.toLocaleString("es-MX")} = Neto: ${dashboard.raffle_net.toLocaleString("es-MX")}
-            </p>
-          </div>
-        ) : (
-          <p className="dashboard-error">No se pudieron cargar los datos.</p>
-        )}
-      </section>
-
-      {/* Timeline Journey */}
-      <section className="timeline-section">
-        <h2 className="section-title" style={{ padding: "0 var(--spacing-4)" }}>Nuestro Camino a Cancún 🚀</h2>
-        <div className="timeline-container">
-          <div className="timeline-item">
-            <div className="timeline-marker"></div>
-            <div className="timeline-content">
-              <span className="timeline-date">Febrero 2026</span>
-              <h3 className="timeline-title">Concepción de la Idea</h3>
-              <p className="timeline-desc">
-                El equipo HyperCore se formó con la visión de innovar en los procesos industriales. 
-                Nació el concepto de "Digital Paintshop" para el KIA Challenge.
-              </p>
-            </div>
-          </div>
-
-          <div className="timeline-item">
-            <div className="timeline-marker"></div>
-            <div className="timeline-content">
-              <span className="timeline-date">Marzo 2026</span>
-              <h3 className="timeline-title">Desarrollo y Prototipado</h3>
-              <p className="timeline-desc">
-                Semanas intensas de diseño, programación y validación. Nuestro prototipo fue seleccionado 
-                para representar a nuestra sede a nivel nacional.
-              </p>
-            </div>
-          </div>
-
-          <div className="timeline-item active">
-            <div className="timeline-marker"></div>
-            <div className="timeline-content">
-              <span className="timeline-date">Abril 2026</span>
-              <h3 className="timeline-title">Recaudación y Gran Sorteo</h3>
-              <p className="timeline-desc">
-                Organizamos esta rifa benéfica para cubrir los viáticos y llevar nuestro proyecto a 
-                las grandes ligas. ¡Aquí es donde tú eres clave! El sorteo será el 25 de abril.
-              </p>
-            </div>
-          </div>
-
-          <div className="timeline-item">
-            <div className="timeline-marker"></div>
-            <div className="timeline-content">
-              <span className="timeline-date">Mayo 2026</span>
-              <h3 className="timeline-title">Final Nacional KIA Innovation</h3>
-              <p className="timeline-desc">
-                Viajaremos a Cancún para competir con las mejores universidades del país, presentar nuestro 
-                Digital Paintshop y poner en alto el nombre de Tecmilenio.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact */}
-      <section className="contact-section">
-        <h2 className="section-title">Contacto</h2>
-        <div className="contact-links">
-          <a
-            href={`https://wa.me/5214421206701?text=${encodeURIComponent("Hola! Tengo una pregunta sobre la rifa HyperCore\n\n")}`}
-            className="btn-primary"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            WhatsApp
-          </a>
-          <a
-            href="https://www.instagram.com/hyper.coree"
-            className="btn-ghost"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Instagram
-          </a>
-        </div>
       </section>
     </div>
   );

@@ -5,7 +5,7 @@ import FolioGrid, { type TicketInfo } from "../../components/FolioGrid";
 
 interface FolioCell {
   number: number;
-  status: "available" | "sold" | "cancelled";
+  status: "available" | "sold" | "pending";
 }
 
 interface DashboardData {

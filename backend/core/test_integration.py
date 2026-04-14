@@ -8,7 +8,7 @@ Integration tests for critical flows (Task 13.3).
 Requirements: 1.1, 2.1, 3.1, 6.1, 7.1, 10.2
 """
 
-from django.contrib.auth.models import User
+from core.models import User
 from django.test import TestCase
 from hypothesis import given, settings as h_settings
 from hypothesis.extra.django import TestCase as HypothesisTestCase

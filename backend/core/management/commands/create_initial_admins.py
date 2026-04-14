@@ -6,7 +6,7 @@ Usage:
     python manage.py create_initial_admins --password mysecretpass
 """
 
-from django.contrib.auth.models import User
+from core.models import User
 from django.core.management.base import BaseCommand
 
 

@@ -24,7 +24,6 @@ interface PublicResultsResponse {
 
 interface ConfirmationInfo {
   active_tickets: number;
-  cancelled_tickets: number;
   unsold_tickets: number;
   total_folios: number;
 }
@@ -82,7 +81,6 @@ export default function DrawPage() {
         } else if (err.status === 428 && data.requires_confirmation) {
           setConfirmInfo({
             active_tickets: data.active_tickets,
-            cancelled_tickets: data.cancelled_tickets,
             unsold_tickets: data.unsold_tickets,
             total_folios: data.total_folios,
           });
@@ -139,10 +137,6 @@ export default function DrawPage() {
             <div className="confirm-stat">
               <span className="stat-value">{confirmInfo.active_tickets}</span>
               <span className="label-meta">Boletos activos</span>
-            </div>
-            <div className="confirm-stat">
-              <span className="stat-value">{confirmInfo.cancelled_tickets}</span>
-              <span className="label-meta">Cancelados</span>
             </div>
             <div className="confirm-stat">
               <span className="stat-value" style={{ color: "var(--error, #ba1a1a)" }}>

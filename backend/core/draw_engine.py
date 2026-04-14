@@ -34,13 +34,21 @@ def execute_draw():
         Ticket.objects.filter(status=Ticket.Status.ACTIVE)
     )
 
-    if len(active_tickets) < MIN_ACTIVE_TICKETS:
+    owner_groups = {}
+    for t in active_tickets:
+        owner_key = t.reserved_by_id if t.reserved_by_id else (t.full_name.strip().lower(), t.phone.strip())
+        if owner_key not in owner_groups:
+            owner_groups[owner_key] = []
+        owner_groups[owner_key].append(t)
+
+    if len(owner_groups) < MIN_ACTIVE_TICKETS:
         raise DrawError(
-            f"Cannot execute draw: need at least {MIN_ACTIVE_TICKETS} "
-            f"active tickets, but only {len(active_tickets)} found."
+            f"Cannot execute draw: need at least {MIN_ACTIVE_TICKETS} distinct owners, "
+            f"but only found tickets for {len(owner_groups)} distinct owners."
         )
 
-    winners = random.sample(active_tickets, MIN_ACTIVE_TICKETS)
+    winner_owners = random.sample(list(owner_groups.keys()), MIN_ACTIVE_TICKETS)
+    winners = [random.choice(owner_groups[owner]) for owner in winner_owners]
 
     results = []
     for rank, ticket in enumerate(winners, start=1):

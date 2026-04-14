@@ -1,11 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getToken } from "../lib/api";
 import "./FolioGrid.css";
 
 const WA_NUMBER = "5214421206701";
 
 interface FolioCell {
   number: number;
-  status: "available" | "sold" | "cancelled";
+  status: "available" | "sold" | "pending";
 }
 
 export interface TicketInfo {
@@ -27,7 +29,7 @@ interface FolioGridProps {
   onReassign?: (ticketId: string) => void;
 }
 
-function openWhatsApp(folio: string, status: "available" | "cancelled") {
+function openWhatsApp(folio: string, status: "available" | "pending") {
   const msg =
     status === "available"
       ? `Hola! Quiero apartar un boleto del Sorteo HyperCore
@@ -40,7 +42,7 @@ Teléfono:
 ¿Los datos son correctos?
 
 (Adjunta tu foto/captura de comprobante de pago)`
-      : `Hola! Vi que el boleto *${folio}* fue liberado en el Sorteo HyperCore
+      : `Hola! Vi que el boleto *${folio}* está pendiente en el Sorteo HyperCore
 
 Cantidad de boletos: 1
 Folio que quiero: *${folio}*
@@ -55,6 +57,33 @@ Teléfono:
 
 export default function FolioGrid({ grid, title = "Boletos", mode = "public", tickets = [], onCancel, onDownloadPdf, onReassign }: FolioGridProps) {
   const [selectedCell, setSelectedCell] = useState<FolioCell | null>(null);
+  const [selectedFolios, setSelectedFolios] = useState<number[]>([]);
+  const navigate = useNavigate();
+  const token = getToken();
+
+  const handleCellClick = (folio: string, cell: FolioCell) => {
+    if (mode === "admin") {
+      setSelectedCell(cell === selectedCell ? null : cell);
+    } else {
+      if (cell.status === "available") {
+        setSelectedFolios(prev => 
+          prev.includes(cell.number) 
+            ? prev.filter(n => n !== cell.number) 
+            : [...prev, cell.number]
+        );
+      }
+    }
+  };
+
+  const handleReserveMultiple = () => {
+    if (token) {
+      // Map back to HC-xxx format for the URL
+      const foliosStr = selectedFolios.map(n => `HC-${String(n).padStart(3, "0")}`).join(",");
+      navigate(`/user/reserve/${foliosStr}`);
+    } else {
+      navigate("/login");
+    }
+  };
 
   return (
     <div className="folio-grid-wrapper">
@@ -70,45 +99,35 @@ export default function FolioGrid({ grid, title = "Boletos", mode = "public", ti
           Vendido
         </span>
         <span className="legend-item">
-          <span className="legend-dot cancelled" />
-          Liberado — fue vendido pero se canceló, ¡puedes comprarlo!
+          <span className="legend-dot pending" />
+          Pendiente — pago en proceso
         </span>
       </div>
 
       <div className="folio-grid">
         {grid.map((cell) => {
           const folio = `HC-${String(cell.number).padStart(3, "0")}`;
-          const isClickable = mode === "admin" || cell.status === "available" || cell.status === "cancelled";
+          const isClickable = mode === "admin" || cell.status === "available";
 
           return (
             <div
               key={cell.number}
-              className={`folio-cell folio-${cell.status}${isClickable ? " folio-clickable" : ""}${selectedCell?.number === cell.number ? " folio-selected" : ""}`}
+              className={`folio-cell folio-${cell.status}${isClickable ? " folio-clickable" : ""}${selectedCell?.number === cell.number ? " folio-selected" : ""}${selectedFolios.includes(cell.number) ? " folio-selected-multi" : ""}`}
               title={
                 cell.status === "sold"
                   ? `${folio} — Vendido`
-                  : cell.status === "cancelled"
-                  ? `${folio} — Liberado, ¡disponible para comprar!`
+                  : cell.status === "pending"
+                  ? `${folio} — Pendiente`
                   : `${folio} — Disponible`
               }
-              onClick={isClickable ? () => {
-                if (mode === "admin") {
-                  setSelectedCell(cell === selectedCell ? null : cell);
-                } else {
-                  openWhatsApp(folio, cell.status as "available" | "cancelled");
-                }
-              } : undefined}
+              onClick={isClickable ? () => handleCellClick(folio, cell) : undefined}
               role={isClickable ? "button" : undefined}
               tabIndex={isClickable ? 0 : undefined}
               onKeyDown={
                 isClickable
                   ? (e) => {
                       if (e.key === "Enter") {
-                        if (mode === "admin") {
-                          setSelectedCell(cell === selectedCell ? null : cell);
-                        } else {
-                          openWhatsApp(folio, cell.status as "available" | "cancelled");
-                        }
+                        handleCellClick(folio, cell);
                       }
                     }
                   : undefined
@@ -119,6 +138,14 @@ export default function FolioGrid({ grid, title = "Boletos", mode = "public", ti
           );
         })}
       </div>
+
+      {/* Multi-Select Floating Bar */}
+      {mode === "public" && selectedFolios.length > 0 && (
+        <div className="multi-select-bar">
+          <span>{selectedFolios.length} folio{selectedFolios.length !== 1 ? 's' : ''} seleccionado{selectedFolios.length !== 1 ? 's' : ''} (${(selectedFolios.length * 200).toLocaleString("es-MX")} MXN)</span>
+          <button className="btn-primary" onClick={handleReserveMultiple}>Reservar Boletos</button>
+        </div>
+      )}
 
       {/* Admin popup */}
       {mode === "admin" && selectedCell && (
@@ -136,10 +163,10 @@ export default function FolioGrid({ grid, title = "Boletos", mode = "public", ti
                 <>
                   <div className="folio-popup-header">
                     <span className="page-subheading" style={{ margin: 0 }}>Folio {folioNumber}</span>
-                    <span className={`chip chip-${selectedCell.status === "sold" ? "active" : "cancelled"}`} style={{ 
+                    <span className={`chip chip-${selectedCell.status === "sold" ? "active" : selectedCell.status === "pending" ? "pending" : "available"}`} style={{ 
                       ...(selectedCell.status === "available" ? { background: "var(--surface-container-low)", color: "var(--on-surface)", border: "1px solid var(--outline)" } : {})
                     }}>
-                      {selectedCell.status === "sold" ? "Vendido" : selectedCell.status === "cancelled" ? "Cancelado" : "Disponible"}
+                      {selectedCell.status === "sold" ? "Vendido" : selectedCell.status === "pending" ? "Pendiente" : "Disponible"}
                     </span>
                   </div>
                   
@@ -170,15 +197,9 @@ export default function FolioGrid({ grid, title = "Boletos", mode = "public", ti
                         {selectedCell.status === "sold" && activeTicket && onDownloadPdf && (
                           <button className="btn-primary btn-sm" onClick={() => onDownloadPdf(activeTicket.id, activeTicket.folio)}>Descargar PDF</button>
                         )}
-                        {selectedCell.status === "cancelled" && anyTicket && onReassign && (
-                          <button className="btn-accent btn-sm" onClick={() => {
-                            onReassign(anyTicket.id);
-                            setSelectedCell(null);
-                          }}>Reasignar Comprador</button>
-                        )}
-                        {selectedCell.status === "cancelled" && (
-                          <button className="btn-secondary btn-sm" onClick={() => openWhatsApp(folioNumber, "cancelled")}>
-                            Compartir Link (Liberado)
+                        {selectedCell.status === "pending" && (
+                          <button className="btn-secondary btn-sm" onClick={() => openWhatsApp(folioNumber, "pending")}>
+                            Compartir Link (Pendiente)
                           </button>
                         )}
                       </div>

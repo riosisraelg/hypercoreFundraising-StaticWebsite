@@ -4,30 +4,34 @@
    ============================================================ */
 
 :root {
-  /* ── Primary ── */
-  --primary: #00534c;
-  --primary-container: #00534c;
+  /* ── Primary (Original Dark Green) ── */
+  --primary: #00534C;
+  --primary-container: #00534C;
   --on-primary: #ffffff;
   --on-primary-container: #ffffff;
-  --primary-fixed-dim: #91d3c9;
-  --on-primary-fixed: #002019;
+  --primary-fixed-dim: #00534C;
+  --on-primary-fixed: #ffffff;
 
-  /* ── Secondary ── */
-  --secondary: #546500;
+  /* ── Secondary (Keep high-vis lime) ── */
+  --secondary: #dcff52;
   --secondary-container: #dcff52;
   --secondary-fixed: #cef145;
-  --on-secondary: #ffffff;
+  --on-secondary: #000000;
 
   /* ── Surface hierarchy ── */
   --surface: #f8f9ff;
-  --surface-container-low: #eff4ff;
-  --surface-container: #e6eeff;
-  --surface-container-high: #dce6fb;
-  --surface-container-highest: #d5e3fc;
+  --surface-container-low: #f1f3f9;
+  --surface-container: #e8ebf2;
+  --surface-container-high: #dee2eb;
+  --surface-container-highest: #d5d9e0;
   --surface-container-lowest: #ffffff;
-  --surface-variant: #e8ede9;
-  --on-surface: #0d1c2e;
-  --on-surface-variant: #3f4946;
+  --surface-variant: #e1e4e8;
+  --on-surface: #0a0c10;
+  --on-surface-variant: #44474e;
+
+  /* ── Dark Surfaces (Reverted / Secondary) ── */
+  --surface-dark: #00534C; /* Reverting sidebar dark to Brand Green */
+  --on-surface-dark: #ffffff;
 
   /* ── Outline ── */
   --outline: #6f7976;
@@ -39,7 +43,7 @@
   --error-container: #ffdad6;
 
   /* ── CTA gradient ── */
-  --cta-gradient: linear-gradient(135deg, #003a35, #00534c);
+  --cta-gradient: linear-gradient(135deg, #003d38, #00534C);
 
   /* ── Shadows (tinted with on-surface) ── */
   --shadow-ambient: 0px 24px 48px rgba(13, 28, 46, 0.06);

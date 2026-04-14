@@ -1,0 +1,661 @@
+[
+  {
+    "model": "core.ticket",
+    "pk": "010b5b52-84ee-403e-a9e0-f8521df1879e",
+    "fields": {
+      "folio": "HC-089",
+      "full_name": "Araceli Guzm\u00e1n Sarabia",
+      "phone": "4422797179",
+      "status": "active",
+      "created_at": "2026-04-12T03:29:08.286Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "04f1e33e-b6ba-443e-84cd-f7e82cbe3003",
+    "fields": {
+      "folio": "HC-041",
+      "full_name": "Irma Juarez Medina",
+      "phone": "4424130207",
+      "status": "active",
+      "created_at": "2026-04-01T14:37:46.861Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "11dcfe76-8ce6-4bb0-9c85-1e06e136742a",
+    "fields": {
+      "folio": "HC-001",
+      "full_name": "Irma Argelia",
+      "phone": "4424130207",
+      "status": "active",
+      "created_at": "2026-03-31T18:47:20.322Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "12969a4a-01bd-42ce-bd00-f83cd62b0882",
+    "fields": {
+      "folio": "HC-043",
+      "full_name": "James Evans Brian Garcia",
+      "phone": "+17203823035",
+      "status": "active",
+      "created_at": "2026-04-01T15:49:49.904Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "17d91f49-00e5-4d9e-b618-7b0a7aca3b0f",
+    "fields": {
+      "folio": "HC-053",
+      "full_name": "James Evans Brian Garcia",
+      "phone": "+17203823035",
+      "status": "active",
+      "created_at": "2026-04-01T15:49:49.904Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "1c115556-c0a7-408a-b376-36f7b57572fd",
+    "fields": {
+      "folio": "HC-037",
+      "full_name": "Irma Yolanda Cano Zerme\u00f1o",
+      "phone": "4421390667",
+      "status": "active",
+      "created_at": "2026-04-01T15:51:31.338Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "1dccaa1c-978c-447c-a2d8-5630bc21ca5a",
+    "fields": {
+      "folio": "HC-092",
+      "full_name": "Conny God\u00ednez Pel\u00e1ez",
+      "phone": "4422046910",
+      "status": "active",
+      "created_at": "2026-04-09T03:23:30.062Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "1f205c2b-403d-45b1-b285-c8e9ef43a777",
+    "fields": {
+      "folio": "HC-030",
+      "full_name": "Fernando de Jes\u00fas R\u00edos Cruz",
+      "phone": "4423433074",
+      "status": "active",
+      "created_at": "2026-04-12T00:35:13.532Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "2000fd62-e6a8-4aae-a764-3ba304116877",
+    "fields": {
+      "folio": "HC-023",
+      "full_name": "James Evans Brian Garcia",
+      "phone": "+17203823035",
+      "status": "active",
+      "created_at": "2026-04-01T15:49:49.904Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "24a10d8f-ef48-4d20-ac16-afacc5a3c748",
+    "fields": {
+      "folio": "HC-166",
+      "full_name": "Iliana Rodriguez Roman",
+      "phone": "5534952050",
+      "status": "active",
+      "created_at": "2026-04-01T15:17:32.126Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "3a95497a-2b4f-402b-a89e-439f17172ec3",
+    "fields": {
+      "folio": "HC-199",
+      "full_name": "borrar",
+      "phone": "4427487589",
+      "status": "cancelled",
+      "created_at": "2026-04-09T01:19:19.322Z",
+      "cancelled_at": "2026-04-09T01:20:24.510Z",
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "41ddd0d9-1e5e-4bdb-90cd-feb3afce1631",
+    "fields": {
+      "folio": "HC-123",
+      "full_name": "Daniela Mendoza",
+      "phone": "4423448512",
+      "status": "active",
+      "created_at": "2026-04-03T17:19:09.927Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "456debc9-e65f-458e-8188-4968b074c94c",
+    "fields": {
+      "folio": "HC-020",
+      "full_name": "Estefan\u00eda Cano Nava",
+      "phone": "4421684102",
+      "status": "active",
+      "created_at": "2026-04-03T21:43:40.479Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "4b74ae7f-48be-4bd0-abf1-62f0598cb9d4",
+    "fields": {
+      "folio": "HC-031",
+      "full_name": "Irma Argelia",
+      "phone": "4424130207",
+      "status": "active",
+      "created_at": "2026-03-31T18:47:20.322Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "4c5e4f30-9a71-4a02-903d-24f6cd7352c8",
+    "fields": {
+      "folio": "HC-004",
+      "full_name": "Ricardo Sierra Roa",
+      "phone": "+52 55 6407 5229",
+      "status": "cancelled",
+      "created_at": "2026-03-31T17:56:56.313Z",
+      "cancelled_at": "2026-03-31T18:33:16.741Z",
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "550fb43f-bfb3-4ac1-9449-23348d5f6027",
+    "fields": {
+      "folio": "HC-022",
+      "full_name": "Gabriela Reza Ledesma",
+      "phone": "4424111287",
+      "status": "active",
+      "created_at": "2026-04-02T02:25:38.668Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "6088d6c8-33af-4605-946d-156045bdc373",
+    "fields": {
+      "folio": "HC-199",
+      "full_name": "Rocio Giles P",
+      "phone": "5527028859",
+      "status": "active",
+      "created_at": "2026-04-11T03:20:28.112Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "63d89228-3622-4322-b914-38fe5166839b",
+    "fields": {
+      "folio": "HC-008",
+      "full_name": "Ricardo Sierra Roa",
+      "phone": "5564075229",
+      "status": "cancelled",
+      "created_at": "2026-03-31T18:59:44.562Z",
+      "cancelled_at": "2026-03-31T19:01:49.594Z",
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "693f12d4-ceb2-43bf-826c-be6a6c031213",
+    "fields": {
+      "folio": "HC-060",
+      "full_name": "Irma Argelia",
+      "phone": "4424130207",
+      "status": "active",
+      "created_at": "2026-03-31T18:47:20.322Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "6e84d029-21be-4819-b5ea-c4cb7f11865d",
+    "fields": {
+      "folio": "HC-066",
+      "full_name": "Irma Argelia",
+      "phone": "4424130207",
+      "status": "active",
+      "created_at": "2026-03-31T18:47:20.322Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "6eed57ff-7538-4994-bdd5-b50105b1d5d8",
+    "fields": {
+      "folio": "HC-038",
+      "full_name": "Roberto Garc\u00eda",
+      "phone": "4421065928",
+      "status": "active",
+      "created_at": "2026-04-01T13:55:58.828Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "7b64a5ee-0a1b-4acd-b93f-187bc714cfa0",
+    "fields": {
+      "folio": "HC-034",
+      "full_name": "Ver\u00f3nica Anton Schiavon",
+      "phone": "4423361493",
+      "status": "active",
+      "created_at": "2026-04-11T03:23:51.830Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "7c692ac0-6fe7-4db9-a76c-4feeb3aa3699",
+    "fields": {
+      "folio": "HC-045",
+      "full_name": "Melissa Escobar",
+      "phone": "4421690297",
+      "status": "active",
+      "created_at": "2026-04-03T17:13:31.822Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "7fe43f93-dec5-4684-848d-3d2f780ebdb1",
+    "fields": {
+      "folio": "HC-004",
+      "full_name": "Irma Argelia Garc\u00eda Ju\u00e1rez",
+      "phone": "4424130207",
+      "status": "active",
+      "created_at": "2026-03-31T18:33:28.024Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "82940547-6c6a-4b75-84d0-bd715723c160",
+    "fields": {
+      "folio": "HC-021",
+      "full_name": "Rocio Giles P",
+      "phone": "5527028859",
+      "status": "active",
+      "created_at": "2026-04-11T03:20:28.112Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "8334dea2-72d2-4ca9-8a6e-90a5beb49642",
+    "fields": {
+      "folio": "HC-027",
+      "full_name": "Irma Argelia",
+      "phone": "4424130207",
+      "status": "active",
+      "created_at": "2026-03-31T18:47:20.322Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "947578ad-882a-45b6-be4f-e62f512c8362",
+    "fields": {
+      "folio": "HC-088",
+      "full_name": "Roberto Alejandro Rios Gonz\u00e1les",
+      "phone": "3339549356",
+      "status": "active",
+      "created_at": "2026-04-10T22:34:39.679Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "99bada49-331e-405e-9042-caf32d7bb15b",
+    "fields": {
+      "folio": "HC-171",
+      "full_name": "Roberto Alejandro R\u00edos Gonz\u00e1les",
+      "phone": "3339549356",
+      "status": "active",
+      "created_at": "2026-04-10T22:35:58.417Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "b12cc90f-a614-496c-9ab2-62e4f27de37f",
+    "fields": {
+      "folio": "HC-006",
+      "full_name": "Ricardo Sierra Roa",
+      "phone": "5564075229",
+      "status": "active",
+      "created_at": "2026-03-31T19:34:23.941Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "b345b7eb-1820-485f-8fe4-c68b0b693420",
+    "fields": {
+      "folio": "HC-024",
+      "full_name": "Alejandro Garc\u00eda Blanco",
+      "phone": "4421233711",
+      "status": "active",
+      "created_at": "2026-04-13T15:59:37.157Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "b37e322c-a10d-4c6b-b131-6f9b1fed9243",
+    "fields": {
+      "folio": "HC-119",
+      "full_name": "Daniela Mendoza",
+      "phone": "4423448512",
+      "status": "active",
+      "created_at": "2026-04-03T17:19:09.927Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "b7934d5b-cd00-431a-806f-c8377f5bce1a",
+    "fields": {
+      "folio": "HC-039",
+      "full_name": "Rosa Mar\u00eda P\u00e9rez Palacios Garc\u00eda",
+      "phone": "5584581326",
+      "status": "active",
+      "created_at": "2026-04-13T15:10:35.022Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "b8bb4e69-e6eb-4642-8bda-5b4f9b8db082",
+    "fields": {
+      "folio": "HC-200",
+      "full_name": "Luis Rodrigo Saucedo Garc\u00eda",
+      "phone": "4424933207",
+      "status": "active",
+      "created_at": "2026-04-04T16:59:53.736Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "b956817f-e6c6-4b58-a820-f1c302c47043",
+    "fields": {
+      "folio": "HC-100",
+      "full_name": "Claudia Alicia Garcia Juarez",
+      "phone": "4424617193",
+      "status": "active",
+      "created_at": "2026-04-10T20:00:07.476Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "b9c55c9a-0de4-48e5-bda7-058d29f9f63d",
+    "fields": {
+      "folio": "HC-026",
+      "full_name": "Rocio Giles P",
+      "phone": "5527028859",
+      "status": "active",
+      "created_at": "2026-04-11T03:20:28.112Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "c057f609-0332-4b59-9188-21366cb480be",
+    "fields": {
+      "folio": "HC-009",
+      "full_name": "Irma Argelia",
+      "phone": "4424130207",
+      "status": "active",
+      "created_at": "2026-03-31T18:47:20.322Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "c99f0957-608f-47ed-bbbd-c3fc518356bd",
+    "fields": {
+      "folio": "HC-019",
+      "full_name": "Ricardo Sierra Roa",
+      "phone": "+52 55 6407 5229",
+      "status": "active",
+      "created_at": "2026-03-31T17:56:56.313Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "cbeac429-a894-431e-adc3-ca3ae2d3a64c",
+    "fields": {
+      "folio": "HC-095",
+      "full_name": "Irma Argelia",
+      "phone": "4424130207",
+      "status": "active",
+      "created_at": "2026-03-31T18:47:20.322Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "d41843a0-7c81-463c-823f-04c3f3701d62",
+    "fields": {
+      "folio": "HC-131",
+      "full_name": "Luis Rodrigo Saucedo Garc\u00eda",
+      "phone": "4424933207",
+      "status": "active",
+      "created_at": "2026-04-04T16:59:53.736Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "db206693-7f9e-4f86-bd77-8eb8dd86fafe",
+    "fields": {
+      "folio": "HC-010",
+      "full_name": "Arturo Sanchez Ojeda",
+      "phone": "4423639669",
+      "status": "active",
+      "created_at": "2026-04-11T05:10:55.070Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "db22a653-613f-4a16-8b40-27a2afc25197",
+    "fields": {
+      "folio": "HC-105",
+      "full_name": "Irma Argelia",
+      "phone": "4424130207",
+      "status": "active",
+      "created_at": "2026-03-31T18:47:20.322Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "db250870-4138-43f0-8d07-632d2d1de45a",
+    "fields": {
+      "folio": "HC-160",
+      "full_name": "Leticia Margarita Becerra Jim\u00e9nez",
+      "phone": "3338280540",
+      "status": "active",
+      "created_at": "2026-04-10T22:36:47.896Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "dc2cea48-782c-432f-ba2a-78581a7f7a34",
+    "fields": {
+      "folio": "HC-058",
+      "full_name": "M\u00f3nica Alejandra L\u00f3pez  P\u00e9rez",
+      "phone": "8111706080",
+      "status": "active",
+      "created_at": "2026-04-12T02:12:50.470Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "e1cb3812-03bf-4c3b-9e68-3ba86137d67c",
+    "fields": {
+      "folio": "HC-007",
+      "full_name": "Roberto Garc\u00eda",
+      "phone": "4421065928",
+      "status": "active",
+      "created_at": "2026-04-01T13:55:58.828Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "e4304cac-1a43-4541-b8ee-a29861172050",
+    "fields": {
+      "folio": "HC-085",
+      "full_name": "Irma Juarez Medina",
+      "phone": "4424130207",
+      "status": "active",
+      "created_at": "2026-04-01T14:37:46.861Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "e8803a50-293c-492a-92d1-6030e79b2743",
+    "fields": {
+      "folio": "HC-008",
+      "full_name": "Ricardo",
+      "phone": "5564075229",
+      "status": "cancelled",
+      "created_at": "2026-03-31T18:35:22.833Z",
+      "cancelled_at": "2026-03-31T18:59:13.774Z",
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "eb799bc1-1543-48af-8671-def144fb0ecd",
+    "fields": {
+      "folio": "HC-118",
+      "full_name": "Hugo Reyes de la Cruz",
+      "phone": "8116117473",
+      "status": "active",
+      "created_at": "2026-04-12T02:14:10.818Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "f3247872-e4f7-4d74-af67-700e827ab51f",
+    "fields": {
+      "folio": "HC-017",
+      "full_name": "Darian L\u00f3pez Garc\u00eda",
+      "phone": "4421806063",
+      "status": "active",
+      "created_at": "2026-04-01T21:07:42.163Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "f5e66b26-beff-4160-9568-80c05b16f763",
+    "fields": {
+      "folio": "HC-029",
+      "full_name": "Irma Argelia",
+      "phone": "4424130207",
+      "status": "active",
+      "created_at": "2026-03-31T18:47:20.322Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.ticket",
+    "pk": "fb6d7d38-6cb7-4cd9-b9b9-f65fcf5cb43b",
+    "fields": {
+      "folio": "HC-013",
+      "full_name": "Conny God\u00ednez Pel\u00e1ez",
+      "phone": "4422046910",
+      "status": "active",
+      "created_at": "2026-04-09T03:23:30.062Z",
+      "cancelled_at": null,
+      "created_by": null
+    }
+  },
+  {
+    "model": "core.fundraisingextra",
+    "pk": 1,
+    "fields": {
+      "amount": 0,
+      "updated_at": "2026-04-02T00:22:59.949Z",
+      "updated_by": null
+    }
+  }
+]

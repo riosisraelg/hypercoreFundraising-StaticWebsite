@@ -45,15 +45,15 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
             <label htmlFor="username" className="label-meta">
-              Usuario
+              Correo electrónico
             </label>
             <input
               id="username"
               className="input-field"
-              type="text"
+              type="email"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Tu nombre de usuario"
+              placeholder="tu@correo.com"
               autoComplete="username"
               required
             />

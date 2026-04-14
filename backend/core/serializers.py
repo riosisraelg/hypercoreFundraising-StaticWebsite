@@ -3,6 +3,42 @@ from django.db import models as db_models
 from rest_framework import serializers
 
 from .models import Ticket
+from core.models import User
+
+class UserCreateSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    full_name = serializers.CharField(write_only=True)
+    phone = serializers.CharField(write_only=True, required=False, allow_blank=True)
+
+    class Meta:
+        model = User
+        fields = ['email', 'password', 'full_name', 'phone']
+
+    def validate_email(self, value):
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("This email is already registered.")
+        return value
+
+    def create(self, validated_data):
+        full_name = validated_data.pop('full_name')
+        # Split full_name naively
+        parts = full_name.split(' ', 1)
+        first_name = parts[0]
+        last_name = parts[1] if len(parts) > 1 else ''
+        
+        # Phone is optional for user, might be saved if we had a profile. 
+        # For now, we will require it on tickets instead.
+        validated_data.pop('phone', None)
+
+        user = User.objects.create_user(
+            username=validated_data['email'],
+            email=validated_data['email'],
+            password=validated_data['password'],
+            first_name=first_name,
+            last_name=last_name
+        )
+        return user
+
 
 
 class TicketCreateSerializer(serializers.Serializer):
@@ -185,14 +221,18 @@ class TicketResponseSerializer(serializers.ModelSerializer):
         source='created_by.username', read_only=True, default=None,
     )
     download_links = serializers.SerializerMethodField()
+    is_winner = serializers.SerializerMethodField()
 
     class Meta:
         model = Ticket
         fields = [
             'id', 'folio', 'full_name', 'phone', 'status',
-            'created_at', 'cancelled_at', 'created_by_username',
-            'download_links',
+            'created_at', 'created_by_username',
+            'download_links', 'expires_at', 'reserved_by', 'is_winner'
         ]
+
+    def get_is_winner(self, obj):
+        return obj.draw_results.exists()
 
     def get_download_links(self, obj):
         request = self.context.get('request')

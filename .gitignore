@@ -82,3 +82,13 @@ dist-ssr
 # Duplicate files with spaces (macOS copies)
 * 2.*
 * 3.*
+
+# === Secrets & Local Data ===
+backend/*.bak
+backend/*.pem
+backend/*.sh
+backend/*.json
+!backend/rds_data_fixed.json
+backend/test_*.py
+backend/fix_data.py
+backend/migrate_legacy.py

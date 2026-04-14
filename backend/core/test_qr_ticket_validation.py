@@ -11,7 +11,7 @@ import hypothesis.strategies as st
 
 from rest_framework import status
 from rest_framework.test import APIClient
-from django.contrib.auth.models import User
+from core.models import User
 
 from core.models import Ticket
 from core.qr_utils import generate_qr_image

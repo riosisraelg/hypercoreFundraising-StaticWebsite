@@ -81,6 +81,22 @@ export function downloadUrl(endpoint: string): string {
   return `${API_BASE}${endpoint}`;
 }
 
+export interface UserProfile {
+  email: string;
+  first_name: string;
+  last_name: string;
+  is_staff: boolean;
+}
+
+export interface TicketInfo {
+  id: string;
+  folio: string;
+  full_name: string;
+  phone: string;
+  status: string;
+  created_at: string;
+}
+
 export const api = {
   get<T>(endpoint: string, auth = false) {
     return request<T>(endpoint, { method: "GET", auth });

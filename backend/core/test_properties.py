@@ -20,7 +20,7 @@ Property 8: Folio reassignment on cancelled tickets
   **Validates: Requirements 3.1, 3.2**
 """
 
-from django.contrib.auth.models import User
+from core.models import User
 from django.test import TestCase
 from hypothesis import given, settings, assume
 from hypothesis.extra.django import TestCase as HypothesisTestCase

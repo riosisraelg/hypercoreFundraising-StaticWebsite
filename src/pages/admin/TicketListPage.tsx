@@ -12,10 +12,9 @@ interface Ticket {
   phone: string;
   status: string;
   created_at: string;
-  cancelled_at: string | null;
 }
 
-type StatusFilter = "all" | "active" | "cancelled";
+type StatusFilter = "all" | "active" | "pending";
 type SortKey = "folio" | "full_name" | "created_at";
 type SortDir = "asc" | "desc";
 
@@ -24,9 +23,6 @@ export default function TicketListPage() {
   const [filter, setFilter] = useState<StatusFilter>("all");
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
-  const [reassignId, setReassignId] = useState<string | null>(null);
-  const [reassignName, setReassignName] = useState("");
-  const [reassignPhone, setReassignPhone] = useState("");
   const [editId, setEditId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
   const [editPhone, setEditPhone] = useState("");
@@ -79,23 +75,10 @@ export default function TicketListPage() {
     return t.status === filter;
   });
 
-  // Only the most recent cancelled ticket per folio gets "Reasignar" (and only if no active ticket exists for that folio)
-  const activeFolios = new Set(
-    tickets.filter((t) => t.status === "active").map((t) => t.folio)
-  );
-  const latestCancelledByFolio = new Map<string, string>();
-  for (const t of sorted) {
-    if (t.status === "cancelled" && !latestCancelledByFolio.has(t.folio)) {
-      latestCancelledByFolio.set(t.folio, t.id);
+  async function handleDelete(ticketId: string) {
+    if (!window.confirm("¿Seguro que deseas liberar este folio? Al hacerlo, sus datos se borraran y quedara disponible inmediatamente.")) {
+      return;
     }
-  }
-  function canReassign(t: Ticket): boolean {
-    if (t.status !== "cancelled") return false;
-    if (activeFolios.has(t.folio)) return false;
-    return latestCancelledByFolio.get(t.folio) === t.id;
-  }
-
-  async function handleCancel(ticketId: string) {
     setError("");
     setActionLoading(ticketId);
     try {
@@ -104,33 +87,23 @@ export default function TicketListPage() {
     } catch (err) {
       if (err instanceof ApiError) {
         const data = err.data as Record<string, string>;
-        setError(data.detail || "Error al cancelar.");
+        setError(data.detail || "Error al liberar boleto.");
       }
     } finally {
       setActionLoading(null);
     }
   }
 
-  async function handleReassign(e: FormEvent) {
-    e.preventDefault();
-    if (!reassignId) return;
+  async function handleApprove(ticketId: string) {
     setError("");
-    setActionLoading(reassignId);
+    setActionLoading(ticketId);
     try {
-      await api.post(
-        `/tickets/${reassignId}/reassign`,
-        { full_name: reassignName, phone: reassignPhone },
-        true
-      );
-      setReassignId(null);
-      setReassignName("");
-      setReassignPhone("");
+      await api.patch(`/tickets/${ticketId}/approve`, undefined, true);
       await loadTickets();
     } catch (err) {
       if (err instanceof ApiError) {
-        const data = err.data as Record<string, string | string[]>;
-        const msgs = Object.values(data).flat().join(" ");
-        setError(msgs || "Error al reasignar.");
+        const data = err.data as Record<string, string>;
+        setError(data.detail || "Error al aprobar boleto.");
       }
     } finally {
       setActionLoading(null);
@@ -212,68 +185,19 @@ export default function TicketListPage() {
 
       {/* Filter tabs */}
       <div className="filter-tabs">
-        {(["all", "active", "cancelled"] as StatusFilter[]).map((f) => (
+        {(["all", "active", "pending"] as StatusFilter[]).map((f) => (
           <button
             key={f}
             className={`filter-tab ${filter === f ? "filter-tab-active" : ""}`}
             onClick={() => setFilter(f)}
             type="button"
           >
-            {f === "all" ? "Todos" : f === "active" ? "Activos" : "Cancelados"}
+            {f === "all" ? "Todos" : f === "active" ? "Activos" : "Pendientes"}
           </button>
         ))}
       </div>
 
-      {/* Reassign modal */}
-      {reassignId && (
-        <div className="modal-overlay" onClick={() => setReassignId(null)}>
-          <div className="modal-card card-elevated" onClick={(e) => e.stopPropagation()}>
-            <h2 className="page-subheading">Reasignar folio</h2>
-            <p className="reassign-folio-label">
-              Folio: {tickets.find((t) => t.id === reassignId)?.folio}
-            </p>
-            <form onSubmit={handleReassign}>
-              <div className="form-group">
-                <label htmlFor="reassign_name" className="label-meta">
-                  Nombre completo
-                </label>
-                <input
-                  id="reassign_name"
-                  className="input-field"
-                  type="text"
-                  value={reassignName}
-                  onChange={(e) => setReassignName(e.target.value)}
-                  placeholder="Nuevo comprador"
-                  maxLength={200}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="reassign_phone" className="label-meta">
-                  Teléfono
-                </label>
-                <input
-                  id="reassign_phone"
-                  className="input-field"
-                  type="tel"
-                  value={reassignPhone}
-                  onChange={(e) => setReassignPhone(e.target.value)}
-                  placeholder="+52 123 456 7890"
-                  required
-                />
-              </div>
-              <div className="modal-actions">
-                <button type="submit" className="btn-primary" disabled={actionLoading === reassignId}>
-                  {actionLoading === reassignId ? "Reasignando…" : "Reasignar"}
-                </button>
-                <button type="button" className="btn-ghost" onClick={() => setReassignId(null)}>
-                  Cancelar
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+
 
       {/* Edit modal */}
       {editId && (
@@ -354,45 +278,46 @@ export default function TicketListPage() {
                   <td>{t.phone}</td>
                   <td>
                     <span className={`chip chip-${t.status}`}>
-                      {t.status === "active" ? "Activo" : "Cancelado"}
+                      {t.status === "active" ? "Activo" : "Pendiente"}
                     </span>
                   </td>
                   <td>{new Date(t.created_at).toLocaleDateString("es-MX")}</td>
                   <td className="actions-cell">
-                    {t.status === "active" ? (
-                      <>
-                        <button
-                          className="btn-ghost btn-sm"
-                          onClick={() => openEdit(t)}
-                          type="button"
-                        >
-                          Editar
-                        </button>
-                        <button
-                          className="btn-ghost btn-sm"
-                          onClick={() => handleCancel(t.id)}
-                          disabled={actionLoading === t.id}
-                          type="button"
-                        >
-                          Cancelar
-                        </button>
-                        <button
-                          className="btn-ghost btn-sm"
-                          onClick={() => handleDownloadPdf(t)}
-                          type="button"
-                        >
-                          PDF
-                        </button>
-                      </>
-                    ) : canReassign(t) ? (
+                    <button
+                      className="btn-ghost btn-sm"
+                      onClick={() => openEdit(t)}
+                      type="button"
+                    >
+                      Editar
+                    </button>
+                    {t.status === "pending" && (
                       <button
-                        className="btn-accent btn-sm"
-                        onClick={() => setReassignId(t.id)}
+                        className="btn-primary btn-sm"
+                        onClick={() => handleApprove(t.id)}
+                        disabled={actionLoading === t.id}
                         type="button"
                       >
-                        Reasignar
+                        Aprobar Pago
                       </button>
-                    ) : null}
+                    )}
+                    <button
+                      className="btn-ghost btn-sm"
+                      onClick={() => handleDelete(t.id)}
+                      disabled={actionLoading === t.id}
+                      type="button"
+                      style={{ color: "var(--error)" }}
+                    >
+                      Liberar (Eliminar)
+                    </button>
+                    {t.status === "active" && (
+                      <button
+                        className="btn-ghost btn-sm"
+                        onClick={() => handleDownloadPdf(t)}
+                        type="button"
+                      >
+                        PDF
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

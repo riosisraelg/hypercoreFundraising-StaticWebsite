@@ -35,12 +35,6 @@ const TEAM_MEMBERS: TeamMember[] = [
     linkedin: "https://linkedin.com/in/miembro4",
     initials: "AZ",
   },
-  {
-    name: "Natalie",
-    role: "Ingeniería Mecatrónica",
-    linkedin: "https://linkedin.com/in/miembro5",
-    initials: "M5",
-  },
 ];
 
 export default function AboutPage() {
@@ -52,7 +46,7 @@ export default function AboutPage() {
           <section className="about-intro">
             <h1 className="page-heading">Sobre Team HyperCore</h1>
             <p className="about-lead">
-              Somos un equipo de 5 estudiantes de ingeniería de la Universidad
+              Somos un equipo de 4 estudiantes de ingeniería de la Universidad
               Tecmilenio. Ganamos la fase regional del KIA Mexico Innovation MeetUp
               2026 con nuestro proyecto de Digital Paint Shop — una solución de
               Industria 4.0 para digitalizar procesos de pintura automotriz.

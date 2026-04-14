@@ -2,6 +2,7 @@ import uuid
 import re
 
 from django.conf import settings
+from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator
 from django.db import models
@@ -16,10 +17,16 @@ def validate_phone(value):
         raise ValidationError("Invalid phone number format.")
 
 
+class User(AbstractUser):
+    @property
+    def is_winner(self):
+        return self.reserved_tickets.filter(draw_results__isnull=False).exists()
+
+
 class Ticket(models.Model):
     class Status(models.TextChoices):
-        ACTIVE = 'active', 'Active'
-        CANCELLED = 'cancelled', 'Cancelled'
+        PENDING = 'pending', 'Pendiente'
+        ACTIVE = 'active', 'Activado'
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     folio = models.CharField(max_length=20, db_index=True)
@@ -31,20 +38,28 @@ class Ticket(models.Model):
         default=Status.ACTIVE,
     )
     created_at = models.DateTimeField(auto_now_add=True)
-    cancelled_at = models.DateTimeField(null=True, blank=True)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
-        related_name='tickets',
+        blank=True,
+        related_name='created_tickets',
     )
+    reserved_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='reserved_tickets',
+    )
+    expires_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
                 fields=['folio'],
-                condition=models.Q(status='active'),
-                name='unique_active_folio',
+                condition=models.Q(status__in=['active', 'pending']),
+                name='unique_active_or_pending_folio',
             ),
         ]
         ordering = ['created_at']
@@ -94,3 +109,21 @@ class FundraisingExtra(models.Model):
 
     def __str__(self):
         return f"Extra income: ${self.amount} MXN"
+
+
+class Withdraw(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    amount = models.PositiveIntegerField(help_text="Withdraw amount in MXN")
+    reason = models.CharField(max_length=255)
+    withdrawn_at = models.DateTimeField(auto_now_add=True)
+    withdrawn_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+    )
+
+    class Meta:
+        ordering = ['-withdrawn_at']
+
+    def __str__(self):
+        return f"Withdraw: ${self.amount} MXN by {self.withdrawn_by}"
