@@ -87,7 +87,9 @@ export default function UserDashboardPage() {
     setDownloading(ticketId);
     try {
       const token = getToken();
-      const response = await fetch(`${import.meta.env.VITE_API_URL || "/api"}/tickets/${ticketId}/download/pdf`, {
+      // Ensure we use the correct API base
+      const baseUrl = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? "" : "https://hypercorefundraising-staticwebsite.onrender.com/api");
+      const response = await fetch(`${baseUrl}/tickets/${ticketId}/download/pdf`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
