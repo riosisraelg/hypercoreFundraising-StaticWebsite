@@ -29,6 +29,15 @@ export default function UserDashboardPage() {
   const [downloading, setDownloading] = useState<string | null>(null);
   const [toast, setToast] = useState<Toast | null>(null);
 
+  // Profile Edit State
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editLoading, setEditLoading] = useState(false);
+  const [editData, setEditData] = useState({
+    full_name: "",
+    email: "",
+    phone: ""
+  });
+
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -40,6 +49,11 @@ export default function UserDashboardPage() {
         setTickets(ticketsData);
         setUser(userData);
         setDashboard(dashData);
+        setEditData({
+          full_name: `${userData.first_name} ${userData.last_name}`.trim(),
+          email: userData.email,
+          phone: userData.phone || ""
+        });
       } catch (e) {
         console.error("Failed to load dashboard data", e);
       } finally {
@@ -48,6 +62,23 @@ export default function UserDashboardPage() {
     };
     loadData();
   }, []);
+
+  const handleEditProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setEditLoading(true);
+    try {
+      const response = await api.patch<{ detail: string, user: UserProfile }>("/auth/me", editData, true);
+      setUser(response.user);
+      setEditModalOpen(false);
+      setToast({ message: "Perfil actualizado con éxito.", type: 'success' });
+      setTimeout(() => setToast(null), 3000);
+    } catch (err) {
+      setToast({ message: "Error al actualizar el perfil.", type: 'error' });
+      setTimeout(() => setToast(null), 3000);
+    } finally {
+      setEditLoading(false);
+    }
+  };
 
   const pendingTickets = tickets.filter(t => t.status === "pending");
   const activeTickets = tickets.filter(t => t.status === "active");
@@ -160,6 +191,9 @@ export default function UserDashboardPage() {
               <div className="profile-info">
                 <h2>{user?.first_name} {user?.last_name}</h2>
                 <p>{user?.email}</p>
+                <p style={{ fontSize: '0.85rem', color: 'var(--primary)', fontWeight: 'bold', marginTop: '4px' }}>
+                  📱 {user?.phone || 'Sin teléfono'}
+                </p>
               </div>
             </div>
 
@@ -172,7 +206,14 @@ export default function UserDashboardPage() {
               </div>
             </div>
 
-            <div style={{ marginTop: 'var(--spacing-4)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-2)', marginTop: 'var(--spacing-4)' }}>
+              <button 
+                className="btn-primary" 
+                style={{ width: '100%', justifyContent: 'center' }}
+                onClick={() => setEditModalOpen(true)}
+              >
+                ✏️ Editar Perfil
+              </button>
               <a href="/results" className="btn-ghost" style={{ width: '100%', justifyContent: 'center', border: '1px solid var(--ghost-border)' }}>
                 🏆 Ver Resultados
               </a>
