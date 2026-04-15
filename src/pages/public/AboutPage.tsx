@@ -35,12 +35,6 @@ const TEAM_MEMBERS: TeamMember[] = [
     linkedin: "https://linkedin.com/in/miembro4",
     initials: "AZ",
   },
-  {
-    name: "Natalie",
-    role: "Ingeniería Mecatrónica",
-    linkedin: "https://linkedin.com/in/miembro5",
-    initials: "M5",
-  },
 ];
 
 export default function AboutPage() {

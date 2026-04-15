@@ -32,11 +32,6 @@ INITIAL_ADMINS = [
         "first_name": "Ana Sarai",
         "last_name": "Zuñiga Esquivel",
     },
-    {
-        "username": "natalie",
-        "first_name": "Natalie",
-        "last_name": "HyperCore",
-    },
 ]
 
 DEFAULT_PASSWORD = "HyperCore2026!"
