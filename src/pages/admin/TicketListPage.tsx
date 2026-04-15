@@ -1,10 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { api, ApiError } from "../../lib/api";
 
-const API_BASE = import.meta.env.DEV
-  ? "/api"
-  : "https://d3uu50tlzv08gz.cloudfront.net/api";
-
 interface Ticket {
   id: string;
   folio: string;
