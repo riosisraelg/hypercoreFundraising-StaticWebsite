@@ -47,6 +47,25 @@ def send_validation_email(ticket):
     except Exception as e:
         print(f"Failed to send email via Resend: {e}")
 
+def send_profile_update_email(user):
+    try:
+        wa_link = "https://wa.me/5214421206701"
+        resend.Emails.send({
+            "from": "HyperCore <info@hypercoreqro.lat>",
+            "to": [user.email],
+            "subject": "Tu perfil de HyperCore ha sido actualizado",
+            "html": f"""
+                <p>Hola <strong>{user.first_name}</strong>,</p>
+                <p>Te informamos que los datos de tu perfil en la plataforma HyperCore han sido modificados recientemente.</p>
+                <p>Si tú realizaste estos cambios, puedes ignorar y borrar este correo tranquilamente.</p>
+                <p><strong>¿No fuiste tú?</strong> Si no reconoces esta actividad, por favor contáctanos de inmediato a través de nuestro soporte técnico en WhatsApp: 
+                <a href="{wa_link}">{wa_link}</a></p>
+                <p>Saludos,<br/>El equipo de HyperCore</p>
+            """
+        })
+    except Exception as e:
+        print(f"Failed to send profile update email: {e}")
+
 def send_draw_results_emails(winners, active_tickets):
     winner_ticket_ids = {w["ticket"].id for w in winners}
     winner_dict = {w["ticket"].id: w for w in winners}

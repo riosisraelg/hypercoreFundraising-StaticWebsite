@@ -8,7 +8,7 @@ from core.models import User
 class UserCreateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     full_name = serializers.CharField(write_only=True)
-    phone = serializers.CharField(write_only=True, required=False, allow_blank=True)
+    phone = serializers.CharField(write_only=True, required=True) # Ahora es obligatorio
 
     class Meta:
         model = User
@@ -16,14 +16,13 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
-            raise serializers.ValidationError("This email is already registered.")
+            raise serializers.ValidationError("Este correo ya está registrado.")
         return value
 
     def create(self, validated_data):
         full_name = validated_data.pop('full_name')
-        phone = validated_data.pop('phone', None)
-        # Split full_name naively
-        parts = full_name.split(' ', 1)
+        phone = validated_data['phone']
+        parts = full_name.strip().split(' ', 1)
         first_name = parts[0]
         last_name = parts[1] if len(parts) > 1 else ''
         
@@ -36,6 +35,31 @@ class UserCreateSerializer(serializers.ModelSerializer):
             phone=phone
         )
         return user
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    full_name = serializers.CharField(required=True, allow_blank=False)
+    email = serializers.EmailField(required=True, allow_blank=False)
+    phone = serializers.CharField(required=True, allow_blank=False)
+
+    class Meta:
+        model = User
+        fields = ['email', 'phone', 'full_name']
+
+    def update(self, instance, validated_data):
+        full_name = validated_data.pop('full_name', None)
+        if full_name:
+            parts = full_name.strip().split(' ', 1)
+            instance.first_name = parts[0]
+            instance.last_name = parts[1] if len(parts) > 1 else ''
+        
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        
+        if 'email' in validated_data:
+            instance.username = validated_data['email']
+            
+        instance.save()
+        return instance
 
 
 

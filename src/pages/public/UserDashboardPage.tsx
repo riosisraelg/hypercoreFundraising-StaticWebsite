@@ -299,6 +299,58 @@ export default function UserDashboardPage() {
         </main>
       </div>
 
+      {editModalOpen && (
+        <div className="modal-overlay" onClick={() => setEditModalOpen(false)}>
+          <div className="modal-card card-elevated" onClick={e => e.stopPropagation()}>
+            <h2 className="page-subheading">Editar Mi Perfil</h2>
+            <p className="label-meta" style={{ marginBottom: "var(--spacing-6)" }}>
+              Actualiza tus datos para recibir correctamente tus boletos.
+            </p>
+            <form onSubmit={handleEditProfile}>
+              <div className="form-group" style={{ marginBottom: 'var(--spacing-4)' }}>
+                <label className="label-meta">Nombre Completo</label>
+                <input 
+                  type="text" 
+                  className="input-field" 
+                  value={editData.full_name} 
+                  onChange={e => setEditData({...editData, full_name: e.target.value})} 
+                  required 
+                />
+              </div>
+              <div className="form-group" style={{ marginBottom: 'var(--spacing-4)' }}>
+                <label className="label-meta">Correo Electrónico</label>
+                <input 
+                  type="email" 
+                  className="input-field" 
+                  value={editData.email} 
+                  onChange={e => setEditData({...editData, email: e.target.value})} 
+                  required 
+                />
+              </div>
+              <div className="form-group" style={{ marginBottom: 'var(--spacing-6)' }}>
+                <label className="label-meta">Número de Teléfono</label>
+                <input 
+                  type="tel" 
+                  className="input-field" 
+                  value={editData.phone} 
+                  onChange={e => setEditData({...editData, phone: e.target.value})} 
+                  placeholder="Ejem: 4421234567"
+                  required 
+                />
+              </div>
+              <div className="modal-actions">
+                <button type="submit" className="btn-primary" disabled={editLoading} style={{ width: '100%' }}>
+                  {editLoading ? "Guardando..." : "Guardar Cambios"}
+                </button>
+                <button type="button" className="btn-ghost" onClick={() => setEditModalOpen(false)} style={{ width: '100%', marginTop: 'var(--spacing-2)' }}>
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {deletePromptOpen && (
         <div className="modal-overlay" onClick={() => setDeletePromptOpen(false)}>
           <div className="modal-card card-elevated" onClick={e => e.stopPropagation()}>

@@ -45,9 +45,13 @@ class RegistrationView(APIView):
 
         send_registration_email(user)
         return Response({"detail": "User registered successfully.", "email": user.email}, status=status.HTTP_201_CREATED)
+from .serializers import UserCreateSerializer, UserUpdateSerializer
+from .emails import send_registration_email, send_reservation_email, send_validation_email, send_draw_results_emails, send_profile_update_email
 
 class AuthMeView(APIView):
-    """GET /api/auth/me — Get details about the current logged-in user."""
+    """GET /api/auth/me — Get details about the current logged-in user.
+    PATCH /api/auth/me — Update profile details.
+    """
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -55,8 +59,32 @@ class AuthMeView(APIView):
             "email": request.user.email,
             "first_name": request.user.first_name,
             "last_name": request.user.last_name,
+            "phone": request.user.phone,
             "is_staff": request.user.is_staff or request.user.is_superuser,
             "is_winner": getattr(request.user, 'is_winner', False)
+        })
+
+    def patch(self, request):
+        serializer = UserUpdateSerializer(
+            request.user, 
+            data=request.data, 
+            partial=True, 
+            context={'request': request}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        
+        # Enviar notificación vía Resend
+        send_profile_update_email(request.user)
+        
+        return Response({
+            "detail": "Perfil actualizado exitosamente.",
+            "user": {
+                "email": request.user.email,
+                "first_name": request.user.first_name,
+                "last_name": request.user.last_name,
+                "phone": request.user.phone,
+            }
         })
 
     def delete(self, request):
