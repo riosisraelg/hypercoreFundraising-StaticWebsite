@@ -223,10 +223,19 @@ export default function UserDashboardPage() {
           </div>
 
           <div className="card" style={{ background: 'var(--surface-container-low)', padding: 'var(--spacing-4)' }}>
-            <p className="label-meta" style={{ fontSize: '0.65rem', marginBottom: 'var(--spacing-2)' }}>Instrucciones rápidas</p>
-            <p style={{ fontSize: '0.8rem', color: 'var(--on-surface-variant)', lineHeight: '1.4' }}>
-              Los boletos apartados caducan en 24 horas. Envía tu comprobante vía WhatsApp para validarlos.
+            <p className="label-meta" style={{ fontSize: '0.65rem', marginBottom: 'var(--spacing-2)' }}>¿Problemas con tu registro?</p>
+            <p style={{ fontSize: '0.8rem', color: 'var(--on-surface-variant)', lineHeight: '1.4', marginBottom: 'var(--spacing-4)' }}>
+              Si prefieres que nosotros gestionemos tus datos, envíanos un mensaje.
             </p>
+            <a 
+              href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(`Hola Equipo HyperCore! 👋\n\nNo deseo registrarme manualmente en la plataforma. ¿Podrían apoyarme vinculando mis datos?\n\nMis datos son:\n- Nombre: ${user?.first_name} ${user?.last_name}\n- Teléfono: ${user?.phone}\n- Correo: ${user?.email}`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-ghost" 
+              style={{ width: '100%', justifyContent: 'center', border: '1px solid #25D366', color: '#128C7E', fontSize: '0.75rem' }}
+            >
+              Ayuda por WhatsApp 🟢
+            </a>
           </div>
         </aside>
 
