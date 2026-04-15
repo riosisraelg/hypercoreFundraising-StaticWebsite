@@ -96,7 +96,9 @@ export default function UserDashboardPage() {
       });
       
       if (!response.ok) {
-        throw new Error("Download failed");
+        const errorText = await response.text();
+        console.error("PDF Download Error:", response.status, errorText);
+        throw new Error(`Server error ${response.status}`);
       }
 
       const blob = await response.blob();

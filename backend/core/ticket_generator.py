@@ -154,27 +154,34 @@ def generate_ticket_pdf(ticket, base_url: str = "") -> bytes:
     c.setFont("Helvetica-Bold", 6)
     c.drawString(margin + 2 * mm, chip_y + 2 * mm, f"SORTEO: {DRAW_DATE}")
 
-    # NEW: QR Code Section
-    if not base_url:
-        from django.conf import settings
-        base_url = getattr(settings, 'SITE_BASE_URL', 'http://localhost:5173')
+    # NEW: QR Code Section (A prueba de fallos)
+    try:
+        if not base_url:
+            from django.conf import settings
+            base_url = getattr(settings, 'SITE_BASE_URL', 'https://fundraising.hypercoreqro.lat')
 
-    from .qr_utils import generate_qr_image
-    qr_bytes = generate_qr_image(ticket.id, base_url)
+        from .qr_utils import generate_qr_image
+        qr_bytes = generate_qr_image(ticket.id, base_url)
 
-    from reportlab.lib.utils import ImageReader
-    qr_image = ImageReader(io.BytesIO(qr_bytes))
+        from reportlab.lib.utils import ImageReader
+        qr_image = ImageReader(io.BytesIO(qr_bytes))
 
-    qr_size = 22 * mm
-    qr_x = width - margin - qr_size
-    qr_y = 14 * mm
-    c.drawImage(qr_image, qr_x, qr_y, width=qr_size, height=qr_size)
+        qr_size = 22 * mm
+        qr_x = width - margin - qr_size
+        qr_y = 14 * mm
+        c.drawImage(qr_image, qr_x, qr_y, width=qr_size, height=qr_size)
 
-    c.setFillColor(ON_SURFACE_MUTED)
-    c.setFont("Helvetica", 5)
-    c.drawString(qr_x, qr_y - 3 * mm, "ESCANEA PARA VALIDAR")
-    c.setFont("Helvetica", 4)
-    c.drawString(qr_x, qr_y - 5 * mm, f"ID: {ticket.id}")
+        c.setFillColor(ON_SURFACE_MUTED)
+        c.setFont("Helvetica", 5)
+        c.drawString(qr_x, qr_y - 3 * mm, "ESCANEA PARA VALIDAR")
+        c.setFont("Helvetica", 4)
+        c.drawString(qr_x, qr_y - 5 * mm, f"ID: {ticket.id}")
+    except Exception as qr_err:
+        print(f"Error generating QR for ticket {ticket.folio}: {qr_err}")
+        # Si el QR falla, dibujamos un placeholder o simplemente continuamos sin el QR
+        c.setFillColor(ON_SURFACE_MUTED)
+        c.setFont("Helvetica", 5)
+        c.drawString(width - margin - 20*mm, 14*mm, "QR no disponible")
 
     # ── Footer — minimal, editorial ──
     c.setFillColor(ON_SURFACE_MUTED)
