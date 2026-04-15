@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? "/api" : "https://d3uu50tlzv08gz.cloudfront.net/api");
+const API_BASE = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? "" : "https://d3uu50tlzv08gz.cloudfront.net/api");
 
 const TOKEN_KEY = "hypercore_admin_token";
 

@@ -2,7 +2,7 @@ from django.conf import settings
 from django.db import models as db_models
 from rest_framework import serializers
 
-from .models import Ticket
+from core.models import Ticket, DrawResult
 
 
 class TicketCreateSerializer(serializers.Serializer):
@@ -230,9 +230,6 @@ class TicketEditSerializer(serializers.Serializer):
         if not data.get('full_name') and not data.get('phone'):
             raise serializers.ValidationError("Provide at least full_name or phone to update.")
         return data
-
-
-from .models import DrawResult
 
 
 class DrawExecuteSerializer(serializers.Serializer):

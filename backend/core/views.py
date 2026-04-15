@@ -5,19 +5,28 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.views import TokenObtainPairView
 
-from .models import Ticket, FundraisingExtra
-from .serializers import (
+from core.models import Ticket, FundraisingExtra, DrawResult
+from core.serializers import (
     TicketBulkCreateSerializer,
     TicketCreateSerializer,
     TicketEditSerializer,
     TicketReassignSerializer,
     TicketResponseSerializer,
+    DashboardSerializer,
+    DrawExecuteSerializer,
+    DrawResultPublicSerializer,
+    DrawResultResponseSerializer,
+    TicketValidationSerializer,
 )
-from .ticket_generator import generate_ticket_pdf
+from core.authentication import JWTQueryParameterAuthentication
+from core.draw_engine import DrawError, execute_draw
+from core.throttles import LoginThrottle, PublicEndpointThrottle
+from core.ticket_generator import generate_ticket_pdf
 
 
 class TicketCreateView(APIView):
@@ -187,9 +196,6 @@ class TicketEditView(APIView):
         return Response(response_serializer.data)
 
 
-
-from .authentication import JWTQueryParameterAuthentication
-
 class TicketDownloadPDFView(APIView):
     """GET /api/tickets/:id/download/pdf — Download ticket as PDF."""
     authentication_classes = [JWTQueryParameterAuthentication]
@@ -251,23 +257,6 @@ class TicketDownloadGoogleWalletView(APIView):
             },
             status=status.HTTP_501_NOT_IMPLEMENTED,
         )
-
-
-from rest_framework.permissions import AllowAny
-
-from .draw_engine import DrawError, execute_draw
-from .models import DrawResult
-from .serializers import (
-    DashboardSerializer,
-    DrawExecuteSerializer,
-    DrawResultPublicSerializer,
-    DrawResultResponseSerializer,
-    TicketValidationSerializer,
-)
-from .throttles import LoginThrottle, PublicEndpointThrottle
-
-
-from rest_framework_simplejwt.views import TokenObtainPairView
 
 
 class ThrottledTokenObtainPairView(TokenObtainPairView):

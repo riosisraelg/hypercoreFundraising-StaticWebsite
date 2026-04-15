@@ -13,12 +13,16 @@ Design follows the Industrial Tech-Editorial design system from DESIGN.md:
 import io
 from datetime import date
 
+from django.conf import settings
 from reportlab.lib.pagesizes import A6
 from reportlab.lib.units import mm
 from reportlab.lib.colors import HexColor
 from reportlab.pdfgen import canvas
 from reportlab.graphics.shapes import Drawing, Rect, String
 from reportlab.graphics import renderPDF
+from reportlab.lib.utils import ImageReader
+
+from core.qr_utils import generate_qr_image
 
 # Draw event constants
 DRAW_TITLE = "Sorteo HyperCore — Innovation MeetUp 2026"
@@ -156,13 +160,9 @@ def generate_ticket_pdf(ticket, base_url: str = "") -> bytes:
 
     # NEW: QR Code Section
     if not base_url:
-        from django.conf import settings
         base_url = getattr(settings, 'SITE_BASE_URL', 'http://localhost:5173')
 
-    from .qr_utils import generate_qr_image
     qr_bytes = generate_qr_image(ticket.id, base_url)
-
-    from reportlab.lib.utils import ImageReader
     qr_image = ImageReader(io.BytesIO(qr_bytes))
 
     qr_size = 22 * mm

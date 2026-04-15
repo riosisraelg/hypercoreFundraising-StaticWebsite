@@ -39,25 +39,70 @@ export default function HomePage() {
   return (
     <div className="home-page">
       {/* Hero */}
+      {/* Hero */}
       <section className="hero-section">
-        <span className="hero-badge">🎟️ Rifa Benéfica — 25 de Abril, 6:00 PM</span>
-        <h1 className="hero-title">¡Compra tu boleto y gana premios!</h1>
-        <p className="hero-description">
-          Rifa benéfica de Team HyperCore (Universidad Tecmilenio).
-          Solo 200 boletos a $200 MXN cada uno. Escoge tu número,
-          paga por transferencia o efectivo, y participa por 3 premios.
-          El sorteo se realiza el 25 de abril a las 6:00 PM en vivo.
-          Todos los fondos van para nuestra participación en la final
-          nacional del KIA Mexico Innovation MeetUp 2026 en Cancún.
-        </p>
-        <a
-          href={`https://wa.me/5214421206701?text=${encodeURIComponent("Hola! Me interesa comprar boleto(s) para la rifa HyperCore\n\nCantidad de boletos: \nFolios que quiero (o aleatorio): \nNombre completo: \nTeléfono de contacto: ")}`}
-          className="btn-primary hero-cta"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          🎟️ Comprar boleto por WhatsApp
-        </a>
+        <div className="hero-content">
+          <span className="hero-badge">🎟️ Rifa Benéfica — 25 de Abril, 6:00 PM</span>
+          <h1 className="hero-title">¡Compra tu boleto y gana premios!</h1>
+          <p className="hero-description">
+            Rifa benéfica de Team HyperCore (Universidad Tecmilenio).
+            Participa por 3 premios premium y ayúdanos a llegar a la final nacional de KIA Innovation en Cancún.
+          </p>
+          
+          <div className="hero-cta-group">
+            <a
+              href={`https://wa.me/5214421206701?text=${encodeURIComponent("Hola! Me interesa comprar boleto(s) para la rifa HyperCore\n\nCantidad de boletos: \nFolios que quiero (o aleatorio): \nNombre completo: \nTeléfono de contacto: ")}`}
+              className="btn-primary hero-cta"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              🎟️ Comprar Boleto vía WhatsApp
+            </a>
+          </div>
+
+          {/* Integrated Mini-Dashboard in Hero */}
+          {!loading && dashboard && (
+            <div className="hero-dashboard animate-fade-in">
+              <div className="hero-progress-container">
+                <div className="hero-progress-info">
+                  <span className="hero-progress-label">Progreso de recaudación</span>
+                  <span className="hero-progress-value">
+                    ${dashboard.total_raised.toLocaleString("es-MX")} / ${dashboard.goal.toLocaleString("es-MX")} ({progressPercent.toFixed(0)}%)
+                  </span>
+                </div>
+                <div className="hero-progress-bar-bg">
+                  <div 
+                    className="hero-progress-bar-fill" 
+                    style={{ width: `${progressPercent}%` }}
+                  >
+                    <div className="hero-progress-glow" />
+                  </div>
+                </div>
+              </div>
+              
+              <div className="hero-stats-grid">
+                <div className="hero-stat-item">
+                  <span className="hero-stat-val">{dashboard.active_tickets}</span>
+                  <span className="hero-stat-lab">Boletos</span>
+                </div>
+                <div className="hero-stat-divider" />
+                <div className="hero-stat-item">
+                  <span className="hero-stat-val">
+                    ${dashboard.raffle_net.toLocaleString("es-MX")}
+                  </span>
+                  <span className="hero-stat-lab">Neto Sorteo</span>
+                </div>
+                <div className="hero-stat-divider" />
+                <div className="hero-stat-item">
+                  <span className="hero-stat-val">
+                    ${dashboard.extra_raised.toLocaleString("es-MX")}
+                  </span>
+                  <span className="hero-stat-lab">Donaciones</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </section>
 
       {/* Prizes */}
@@ -85,156 +130,140 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* How to participate + Payment Info — side by side */}
+      {/* How to participate + Payment Info — Side by side Premium Container */}
       <section className="participate-payment-section">
-        <div className="participate-payment-grid">
-          <div className="participate-block">
-            <h2 className="section-title">¿Cómo participar?</h2>
-            <ol className="steps-list">
-              <li className="step-item">
-                <span className="step-number">1</span>
-                <div>
-                  <span className="step-title">Escoge tu número</span>
-                  <span className="step-desc">
-                    Revisa la tabla de boletos abajo y elige los números disponibles.
-                  </span>
-                </div>
-              </li>
-              <li className="step-item">
-                <span className="step-number">2</span>
-                <div>
-                  <span className="step-title">Escríbenos por WhatsApp</span>
-                  <span className="step-desc">
-                    Mándanos tu nombre, teléfono y los números que quieres.
-                  </span>
-                </div>
-              </li>
-              <li className="step-item">
-                <span className="step-number">3</span>
-                <div>
-                  <span className="step-title">Paga $200 MXN por boleto</span>
-                  <span className="step-desc">
-                    Transferencia bancaria o efectivo. Envía tu comprobante por WhatsApp.
-                  </span>
-                </div>
-              </li>
-              <li className="step-item">
-                <span className="step-number">4</span>
-                <div>
-                  <span className="step-title">Recibe tu boleto digital</span>
-                  <span className="step-desc">
-                    Te enviamos un PDF con tu folio único.
-                  </span>
-                </div>
-              </li>
-              <li className="step-item">
-                <span className="step-number">5</span>
-                <div>
-                  <span className="step-title">Sorteo el 25 de Abril, 6 PM</span>
-                  <span className="step-desc">
-                    3 ganadores al azar. Resultados aquí y por WhatsApp.
-                  </span>
-                </div>
-              </li>
-            </ol>
-          </div>
+        <div className="section-container-unified card-premium">
+          <div className="participate-payment-grid">
+            <div className="participate-block">
+              <div className="participate-header">
+                <span className="participate-badge">Guía Rápida</span>
+                <h2 className="section-title">¿Cómo participar?</h2>
+              </div>
+              <ol className="steps-list-modern">
+                <li className="step-item-modern">
+                  <div className="step-icon">1</div>
+                  <div className="step-info">
+                    <h3 className="step-title-text">Escoge tu número</h3>
+                    <p className="step-desc-text">Revisa la disponibilidad en la tabla de abajo y selecciona tus favoritos.</p>
+                  </div>
+                </li>
+                <li className="step-item-modern">
+                  <div className="step-icon">2</div>
+                  <div className="step-info">
+                    <h3 className="step-title-text">Escríbenos por WhatsApp</h3>
+                    <p className="step-desc-text">Mándanos tu nombre y los folios que elegiste para reservarlos.</p>
+                  </div>
+                </li>
+                <li className="step-item-modern active-step">
+                  <div className="step-icon">3</div>
+                  <div className="step-info">
+                    <h3 className="step-title-text">Realiza tu pago</h3>
+                    <p className="step-desc-text">Usa los datos de la tarjeta <span className="hide-on-mobile">a la derecha</span><span className="show-on-mobile">abajo</span> para transferencia o efectivo.</p>
+                  </div>
+                  <div className="step-pointer">
+                    <svg className="step-pointer-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                  </div>
+                </li>
+                <li className="step-item-modern">
+                  <div className="step-icon">4</div>
+                  <div className="step-info">
+                    <h3 className="step-title-text">Recibe tu boleto digital</h3>
+                    <p className="step-desc-text">Una vez validado el pago, te enviamos tu PDF con folio único.</p>
+                  </div>
+                </li>
+                <li className="step-item-modern">
+                  <div className="step-icon">5</div>
+                  <div className="step-info">
+                    <h3 className="step-title-text">Gran Sorteo</h3>
+                    <p className="step-desc-text">25 de Abril, 6:00 PM. ¡Mucha suerte!</p>
+                  </div>
+                </li>
+              </ol>
+            </div>
 
-          <div className="payment-info-card card-elevated">
-            <h2 className="section-title">Datos de pago</h2>
-            <p className="payment-thanks">
-              ¡Gracias por apoyarnos a llegar a la final!
-            </p>
-            <div className="payment-details">
-              <div className="payment-row">
-                <span className="payment-label">Beneficiaria</span>
-                <span className="payment-value">Mariana Lopez Garcia</span>
-              </div>
-              <div className="payment-row payment-row--highlight">
-                <span className="payment-value payment-bank">BBVA</span>
-              </div>
-              <div className="payment-row">
-                <span className="payment-label">No. Cuenta</span>
-                <span className="payment-value">1596786461</span>
-              </div>
-              <div className="payment-row">
-                <span className="payment-label">CLABE</span>
-                <span className="payment-value">012180015967864619</span>
+            <div className="payment-column">
+              <div className="payment-info-card card-premium-inner">
+                <div className="payment-header">
+                  <span className="payment-icon-top">💳</span>
+                  <h2 className="section-title-sm">Datos de pago</h2>
+                  <p className="payment-thanks">
+                    ¡Gracias por apoyarnos! Tu aporte directo impulsa nuestra participación nacional.
+                  </p>
+                </div>
+
+                <div className="payment-details-modern">
+                  <div className="payment-field">
+                    <span className="field-label">Beneficiaria</span>
+                    <div className="field-content">
+                      <span className="field-value">Mariana Lopez Garcia</span>
+                    </div>
+                  </div>
+
+                  <div className="payment-bank-branding">
+                    <span className="bank-logo">BBVA</span>
+                    <span className="bank-type">Transferencia Interbancaria</span>
+                  </div>
+
+                  <div className="payment-field copyable" onClick={() => {
+                    navigator.clipboard.writeText("1596786461");
+                    alert("Número de cuenta copiado");
+                  }}>
+                    <span className="field-label">Número de Cuenta</span>
+                    <div className="field-content">
+                      <span className="field-value mono">1596786461</span>
+                      <button className="copy-btn" title="Copiar">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="payment-field copyable" onClick={() => {
+                    navigator.clipboard.writeText("012180015967864619");
+                    alert("CLABE copiada");
+                  }}>
+                    <span className="field-label">CLABE</span>
+                    <div className="field-content">
+                      <span className="field-value mono">012180015967864619</span>
+                      <button className="copy-btn" title="Copiar">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="payment-footer">
+                  <p className="payment-note">
+                    <span className="note-icon">✨</span> Envía tu comprobante por WhatsApp para validar tu folio.
+                  </p>
+                  <a
+                    href={`https://wa.me/5214421206701?text=${encodeURIComponent("Hola! Adjunto mi comprobante de pago para la rifa HyperCore\n\n(Adjunta aquí tu foto/captura del comprobante)")}`}
+                    className="btn-primary payment-cta-modern"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span>Enviar comprobante</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                  </a>
+                </div>
               </div>
             </div>
-            <p className="payment-note">
-              ¡No olvides enviar tu comprobante por WhatsApp!
-            </p>
-            <a
-              href={`https://wa.me/5214421206701?text=${encodeURIComponent("Hola! Adjunto mi comprobante de pago para la rifa HyperCore\n\nCantidad de boletos pagados: \nFolios que quiero (o aleatorio): \nNombre completo: \nTeléfono de contacto: \n\n¿La información es correcta?\n\n(Adjunta aquí tu foto/captura del comprobante)")}`}
-              className="btn-primary payment-cta"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Enviar comprobante
-            </a>
           </div>
         </div>
       </section>
 
       {/* Folio Grid + Dashboard */}
+      {/* Folio Grid + Transparency */}
       <section className="dashboard-section">
         {dashboard?.grid && (
           <FolioGrid grid={dashboard.grid} title="¡Escoge tu boleto!" />
         )}
-        <h2 className="section-title">Progreso de recaudación</h2>
-        {loading ? (
-          <p className="dashboard-loading">Cargando datos…</p>
-        ) : dashboard ? (
-          <div className="dashboard-card card-elevated">
-            <div className="dashboard-stats">
-              <div className="stat-block">
-                <span className="stat-value">{dashboard.active_tickets}</span>
-                <span className="stat-label">Boletos vendidos</span>
-              </div>
-              <div className="stat-block">
-                <span className="stat-value">
-                  ${dashboard.raffle_net.toLocaleString("es-MX")}
-                </span>
-                <span className="stat-label">Neto sorteo</span>
-              </div>
-              <div className="stat-block">
-                <span className="stat-value">
-                  ${dashboard.extra_raised.toLocaleString("es-MX")}
-                </span>
-                <span className="stat-label">Otros ingresos</span>
-              </div>
-              <div className="stat-block">
-                <span className="stat-value">
-                  ${dashboard.goal.toLocaleString("es-MX")}
-                </span>
-                <span className="stat-label">Meta total</span>
-              </div>
-            </div>
-            <div className="progress-bar-stacked" aria-label="Progreso de recaudación">
-              <div
-                className="progress-segment progress-raffle"
-                style={{ width: `${Math.min((dashboard.raffle_net / dashboard.goal) * 100, 100)}%` }}
-                title={`Sorteo (neto): ${dashboard.raffle_net.toLocaleString("es-MX")}`}
-              />
-              <div
-                className="progress-segment progress-extra"
-                style={{ width: `${Math.min((dashboard.extra_raised / dashboard.goal) * 100, 100)}%` }}
-                title={`Otros: ${dashboard.extra_raised.toLocaleString("es-MX")}`}
-              />
-            </div>
-            <div className="progress-legend">
-              <span className="legend-item"><span className="legend-dot-bar raffle" /> Sorteo (neto de premios)</span>
-              <span className="legend-item"><span className="legend-dot-bar extra" /> Otros ingresos</span>
-            </div>
-            <p className="progress-text">
-              ${dashboard.total_raised.toLocaleString("es-MX")} de ${dashboard.goal.toLocaleString("es-MX")} ({progressPercent.toFixed(0)}%)
-            </p>
-            <p className="transparency-note">
-              Venta bruta: ${dashboard.raffle_gross.toLocaleString("es-MX")} − Premios: ${dashboard.prize_costs.toLocaleString("es-MX")} = Neto: ${dashboard.raffle_net.toLocaleString("es-MX")}
-            </p>
+        
+        {dashboard && (
+          <div className="transparency-footer">
+               <p className="transparency-note">
+                <strong>Transparencia:</strong> Venta bruta: ${dashboard.raffle_gross.toLocaleString("es-MX")} − Premios: ${dashboard.prize_costs.toLocaleString("es-MX")} = Neto: ${dashboard.raffle_net.toLocaleString("es-MX")}
+              </p>
           </div>
-        ) : (
-          <p className="dashboard-error">No se pudieron cargar los datos.</p>
         )}
       </section>
 

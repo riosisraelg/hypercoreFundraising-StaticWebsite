@@ -61,7 +61,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     # Local
-    'core',
+    'core.apps.CoreConfig',
 ]
 
 MIDDLEWARE = [
@@ -167,9 +167,9 @@ SIMPLE_JWT = {
 
 # --- CORS ---
 CORS_ALLOWED_ORIGINS = [
-    origin.strip()
-    for origin in os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:5173').split(',')
-    if origin.strip()
+    'https://fundraising.hypercoreqro.lat',
+    'https://hypercoreqro.lat',
+    'http://localhost:5173',
 ]
 CORS_ALLOW_CREDENTIALS = True
 
