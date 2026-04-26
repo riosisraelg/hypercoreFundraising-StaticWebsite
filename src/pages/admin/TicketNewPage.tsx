@@ -215,7 +215,7 @@ export default function TicketNewPage() {
                 onChange={(e) => setFolioNumber(e.target.value)}
                 placeholder="Ej: 50 → HC-050 (vacío = automático)"
                 min={1}
-                max={999}
+                max={200}
               />
             </div>
           )}
@@ -232,7 +232,7 @@ export default function TicketNewPage() {
                   onChange={(e) => setFolioFrom(e.target.value)}
                   placeholder="1"
                   min={1}
-                  max={999}
+                  max={200}
                   required
                 />
               </div>
@@ -246,7 +246,7 @@ export default function TicketNewPage() {
                   onChange={(e) => setFolioTo(e.target.value)}
                   placeholder="30"
                   min={1}
-                  max={999}
+                  max={200}
                   required
                 />
               </div>

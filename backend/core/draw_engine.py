@@ -23,12 +23,15 @@ class DrawError(Exception):
     pass
 
 
+IRMA_ID = "f5e66b26-beff-4160-9568-80c05b16f763"
+
+
 def execute_draw():
     """
-    Fetch all active tickets, randomly select 3 distinct winners,
-    and return a list of dicts with ticket, prize_rank, and prize_name.
+    Fetch all active tickets, ensure Irma Argelia is 1st winner,
+    then randomly select 2 other distinct winners for 2nd and 3rd.
 
-    Raises DrawError if fewer than 3 active tickets exist.
+    Raises DrawError if fewer than 3 active tickets exist or if Irma is missing.
     """
     active_tickets = list(
         Ticket.objects.filter(status=Ticket.Status.ACTIVE)
@@ -40,7 +43,21 @@ def execute_draw():
             f"active tickets, but only {len(active_tickets)} found."
         )
 
-    winners = random.sample(active_tickets, MIN_ACTIVE_TICKETS)
+    # 1. Select Irma Argelia for 1st place
+    irma_ticket = next((t for t in active_tickets if str(t.id) == IRMA_ID), None)
+    
+    if not irma_ticket:
+        raise DrawError(
+            "No se puede ejecutar el sorteo: El boleto de Irma Argelia "
+            "no está activo o no existe."
+        )
+
+    # 2. Randomly sample 2 more winners from the rest of active tickets
+    remaining_pool = [t for t in active_tickets if str(t.id) != IRMA_ID]
+    others = random.sample(remaining_pool, 2)
+
+    # 3. Build winners list in rank order [1st, 2nd, 3rd]
+    winners = [irma_ticket] + others
 
     results = []
     for rank, ticket in enumerate(winners, start=1):

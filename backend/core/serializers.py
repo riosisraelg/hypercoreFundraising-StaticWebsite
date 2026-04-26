@@ -15,7 +15,7 @@ class TicketCreateSerializer(serializers.Serializer):
     full_name = serializers.CharField(max_length=200)
     phone = serializers.CharField(max_length=20)
     folio_number = serializers.IntegerField(
-        required=False, allow_null=True, min_value=1, max_value=999,
+        required=False, allow_null=True, min_value=1, max_value=200,
     )
 
     def validate_full_name(self, value):
@@ -60,22 +60,32 @@ class TicketCreateSerializer(serializers.Serializer):
         return ticket
 
     def _generate_folio(self):
-        """Auto-generate the next sequential folio like HC-001, HC-002, etc."""
+        """Pick a random available folio number between 1 and 200."""
+        import random
         prefix = getattr(settings, 'FOLIO_PREFIX', 'HC')
-        last_ticket = (
-            Ticket.objects.filter(folio__startswith=f"{prefix}-")
-            .order_by('-folio')
-            .values_list('folio', flat=True)
-            .first()
-        )
-        if last_ticket:
+        
+        # Get all currently active folio numbers
+        active_numbers = set()
+        active_folios = Ticket.objects.filter(
+            status=Ticket.Status.ACTIVE,
+            folio__startswith=f"{prefix}-"
+        ).values_list('folio', flat=True)
+        
+        for f in active_folios:
             try:
-                last_num = int(last_ticket.split('-')[-1])
+                num = int(f.split('-')[-1])
+                active_numbers.add(num)
             except (ValueError, IndexError):
-                last_num = 0
-        else:
-            last_num = 0
-        return f"{prefix}-{last_num + 1:03d}"
+                continue
+
+        # Find available numbers in the 1-200 range
+        available_numbers = [i for i in range(1, 201) if i not in active_numbers]
+        
+        if not available_numbers:
+            raise serializers.ValidationError("No hay folios disponibles (límite de 200 alcanzado).")
+            
+        chosen_num = random.choice(available_numbers)
+        return f"{prefix}-{chosen_num:03d}"
 
 
 class TicketBulkCreateSerializer(serializers.Serializer):
@@ -87,11 +97,11 @@ class TicketBulkCreateSerializer(serializers.Serializer):
     full_name = serializers.CharField(max_length=200)
     phone = serializers.CharField(max_length=20)
     folio_numbers = serializers.ListField(
-        child=serializers.IntegerField(min_value=1, max_value=999),
+        child=serializers.IntegerField(min_value=1, max_value=200),
         required=False, allow_empty=True, max_length=200,
     )
-    folio_from = serializers.IntegerField(required=False, min_value=1, max_value=999)
-    folio_to = serializers.IntegerField(required=False, min_value=1, max_value=999)
+    folio_from = serializers.IntegerField(required=False, min_value=1, max_value=200)
+    folio_to = serializers.IntegerField(required=False, min_value=1, max_value=200)
 
     def validate_full_name(self, value):
         if not value or not value.strip():
@@ -238,12 +248,14 @@ class DrawExecuteSerializer(serializers.Serializer):
         required=False, default="", max_length=50, allow_blank=True,
     )
 
+    VALID_PHRASES = {"rewrite draw", "confirmar sorteo"}
+
     def validate_confirmation(self, value):
         if value and value.strip():
             value = value.strip()
-            if value != "rewrite draw":
+            if value not in self.VALID_PHRASES:
                 raise serializers.ValidationError(
-                    'Confirmation must be exactly "rewrite draw" or empty.'
+                    'Confirmation must be "confirmar sorteo", "rewrite draw", or empty.'
                 )
         return value.strip() if value else ""
 
